@@ -1,0 +1,345 @@
+---
+// Bagian Frontmatter Astro
+const title = "Interactive Audio Lesson - BBC Pare";
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="header-player">
+        <h2>Unit 1 : Greetings & Small Talk</h2>
+        <p style="font-size: 0.75rem; color: #64748b; margin-top: -10px; margin-bottom: 15px;">
+            Putar audio dan baca text dialognya lalu ikuti cara pelafalannya!
+        </p>
+        <audio id="mainAudio" controls preload="metadata">
+            <source src="https://www.kampunginggrisbbc.com/wp-content/uploads/2026/03/AudioScript_GreetingsnSmalltalk.mp3" type="audio/mpeg">
+        </audio>
+
+        <div class="speed-wrapper">
+            <button class="btn-speed" onclick="setPlaySpeed(0.5, this)">0.5x</button>
+            <button class="btn-speed" onclick="setPlaySpeed(0.8, this)">0.8x</button>
+            <button class="btn-speed active" onclick="setPlaySpeed(1.0, this)">Normal</button>
+            <button class="btn-speed" onclick="setPlaySpeed(1.2, this)">1.2x</button>
+        </div>
+    </div>
+
+    <div class="transcript-container" id="transcriptBody">
+        <div class="dialog-card" data-time="0">
+            <span class="speaker">Alex</span>
+            <span class="message">Sam! Hey, man! Long time no see! Is that really you?</span>
+        </div>
+
+        <div class="dialog-card" data-time="5">
+            <span class="speaker">Sam</span>
+            <span class="message">Alex! Oh my god, it’s been ages! I almost didn’t recognize you with that beard.</span>
+        </div>
+
+        <div class="dialog-card" data-time="12">
+            <span class="speaker">Alex</span>
+            <span class="message">Haha, yeah, it's the "new me." Seriously though, how have you been?</span>
+        </div>
+        
+        <div class="dialog-card" data-time="18">
+            <span class="speaker">Sam</span>
+            <span class="message">Busy as always, you know how the startup life is. How’s life treating you?</span>
+        </div>
+
+        <div class="dialog-card" data-time="24">
+            <span class="speaker">Alex</span>
+            <span class="message">Can’t complain, honestly. Life’s been pretty kind lately. Anyway, Sam, meet John.</span>
+        </div>
+
+        <div class="dialog-card" data-time="32">
+            <span class="speaker">Sam</span>
+            <span class="message">Oh, how do you do, John?</span>
+        </div>
+
+        <div class="dialog-card" data-time="34">
+            <span class="speaker">John</span>
+            <span class="message">How do you do? Sam. Alex has mentioned your name a few times.</span>
+        </div>
+
+        <div class="dialog-card" data-time="38">
+            <span class="speaker">Sam</span>
+            <span class="message">All good things, I hope! So, what’s up? Why are you guys hanging out at this park?</span>
+        </div>
+
+        <div class="dialog-card" data-time="44">
+            <span class="speaker">Alex</span>
+            <span class="message">Just clearing our heads. What are you up to here?</span>
+        </div>
+
+        <div class="dialog-card" data-time="48">
+            <span class="speaker">Sam</span>
+            <span class="message">Just taking the dog for a walk. So, what’s going on with that big project you were working on?</span>
+        </div>
+
+        <div class="dialog-card" data-time="55">
+            <span class="speaker">Alex</span>
+            <span class="message">It’s finally finished! It was a grind, but it's done. How’s your day looking so far?</span>
+        </div>
+
+        <div class="dialog-card" data-time="61">
+            <span class="speaker">Sam</span>
+            <span class="message">Pretty good, but I’ve got a back-to-back meeting starting in twenty minutes.</span>
+        </div>
+
+        <div class="dialog-card" data-time="66">
+            <span class="speaker">John</span>
+            <span class="message">That sounds intense. How are you handling all that stress?</span>
+        </div>
+
+        <div class="dialog-card" data-time="70">
+            <span class="speaker">Sam</span>
+            <span class="message">As usual, I’m just powered by black coffee and willpower.</span>
+        </div>
+
+        <div class="dialog-card" data-time="75">
+            <span class="speaker">Alex</span>
+            <span class="message">Haha, I see not much has changed since college then!</span>
+        </div>
+
+        <div class="dialog-card" data-time="79">
+            <span class="speaker">Sam</span>
+            <span class="message">Not a single thing! Anyway, it was really good to see you!</span>
+        </div>
+
+        <div class="dialog-card" data-time="83">
+            <span class="speaker">Alex</span>
+            <span class="message">Definitely. We should grab a proper drink soon. See you!</span>
+        </div>
+        
+        <div class="dialog-card" data-time="83">
+            <span class="speaker">Alex</span>
+            <span class="message">Definitely. We should grab a proper drink soon. See you!</span>
+        </div>
+
+        <div class="dialog-card" data-time="87">
+            <span class="speaker">John</span>
+            <span class="message">It was a pleasure meeting you, Sam. Have a good day.!</span>
+        </div>
+        
+        <div class="dialog-card" data-time="90">
+            <span class="speaker">Sam</span>
+            <span class="message">You too! Catch you later, guys!</span>
+        </div>
+
+        <div class="dialog-card" data-time="93">
+            <span class="speaker">Alex</span>
+            <span class="message">Bye, Sam! Take it easy!</span>
+        </div>
+    </div>
+</div>
+
+<style is:global>
+    /* Reset & Base Styling */
+    * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+        --primary: #4f46e5;
+        --bg-body: #f1f5f9;
+        --bg-card: #ffffff;
+        --text-main: #1e293b;
+        --text-grey: #64748b;
+        --border: #e2e8f0;
+        --active-light: #eef2ff;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Container: Full on Mobile, Card on Desktop */
+    .container {
+        width: 100%;
+        max-width: 700px;
+        background: var(--bg-card);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    /* Sticky Header */
+    .header-player {
+        position: sticky;
+        top: 0;
+        background: var(--bg-card);
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+        z-index: 100;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 { margin: 0 0 15px 0; font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+
+    audio { width: 100%; height: 44px; margin-bottom: 15px; }
+
+    /* Speed Control */
+    .speed-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        background: #f8fafc;
+        padding: 6px;
+        border-radius: 12px;
+    }
+
+    .btn-speed {
+        flex: 1;
+        background: transparent;
+        border: none;
+        padding: 8px 5px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-grey);
+        transition: 0.2s;
+    }
+
+    .btn-speed.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+    }
+
+    /* Transcript Area */
+    .transcript-container {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+    }
+
+    /* Individual Dialog Cards */
+    .dialog-card {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        padding: 16px;
+        border-radius: 14px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        overflow-wrap: break-word; 
+        word-wrap: break-word;
+    }
+
+    .dialog-card:last-child { margin-bottom: 40px; }
+
+    .dialog-card.active {
+        background-color: var(--active-light);
+        border-color: var(--primary);
+        transform: scale(0.98); 
+    }
+
+    .speaker {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--text-grey);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 6px;
+    }
+
+    .message {
+        font-size: 1rem;
+        line-height: 1.5;
+        color: var(--text-main);
+        font-weight: 400;
+    }
+
+    /* Desktop Adjustments */
+    @media (min-width: 768px) {
+        body { padding: 40px 20px; }
+        .container {
+            min-height: auto;
+            height: 85vh;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    /* Custom Scrollbar */
+    .transcript-container::-webkit-scrollbar { width: 4px; }
+    .transcript-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+</style>
+
+<script is:inline>
+    // Gunakan is:inline agar fungsi setPlaySpeed bisa diakses oleh tombol HTML
+    const audio = document.getElementById('mainAudio');
+    const cards = document.querySelectorAll('.dialog-card');
+    const container = document.getElementById('transcriptBody');
+
+    // 1. Logika Kecepatan
+    window.setPlaySpeed = function(rate, btn) {
+        if (!audio) return;
+        audio.playbackRate = rate;
+        document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    // 2. Klik/Tap Dialog
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const time = parseFloat(card.getAttribute('data-time'));
+            audio.currentTime = time;
+            audio.play();
+        });
+    });
+
+    // 3. Tracking Sinkronisasi
+    let lastActive = -1;
+
+    audio.addEventListener('timeupdate', () => {
+        const now = audio.currentTime;
+        let currentIdx = -1;
+
+        cards.forEach((card, i) => {
+            const start = parseFloat(card.getAttribute('data-time'));
+            const next = cards[i + 1];
+            const end = next ? parseFloat(next.getAttribute('data-time')) : Infinity;
+
+            if (now >= start && now < end) {
+                currentIdx = i;
+            }
+        });
+
+        if (currentIdx !== -1 && currentIdx !== lastActive) {
+            cards.forEach(c => c.classList.remove('active'));
+            const activeCard = cards[currentIdx];
+            activeCard.classList.add('active');
+
+            // Auto-scroll ke tengah area pandang
+            activeCard.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            lastActive = currentIdx;
+        }
+    });
+</script>
+
+</body>
+</html>
