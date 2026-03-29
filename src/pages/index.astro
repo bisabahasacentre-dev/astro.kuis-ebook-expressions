@@ -15,7 +15,24 @@ const title = "BBC Ultra Quiz - English Expressions";
 <body>
 
 <div id="bbc-quiz-ultra">
-    <div id="quiz-loader" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px;">
+    <div class="quiz-banner">
+        <img 
+            src="/Images/Banner-kuis-web.webp" 
+            alt="English Learning Banner"
+            loading="lazy"
+            width="500"
+            height="180"
+        />
+    </div>
+
+    <div id="quiz-timer-container" style="display: none;">
+        <div class="timer-pill">
+            <span class="timer-icon">⏱️</span>
+            <span id="timer-display">03:00</span>
+        </div>
+    </div>
+
+    <div id="quiz-loader" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
         <div class="spinner"></div>
         <p style="margin-top: 15px; color: #94a3b8; font-size: 14px; font-weight: 500;">Menyiapkan kuis untuk Anda...</p>
     </div>
@@ -32,9 +49,9 @@ const title = "BBC Ultra Quiz - English Expressions";
             </h3>
             <ul style="text-align: left; font-size: 13px; color: #475569; padding-left: 18px; line-height: 1.7; margin: 0; list-style-type: disc;">
                 <li>Total <strong>15 Soal</strong> (Pilihan Ganda, Isian & Listening).</li>
+                <li>Waktu pengerjaan maksimal <strong>3 Menit</strong>.</li>
                 <li>Gunakan Speaker/Earphone untuk soal Listening.</li>
-                <li>Feedback jawaban benar akan muncul jika jawabanmu salah.</li>
-                <li>Skor akan muncul otomatis di akhir kuis</li>
+                <li>Skor akan muncul otomatis di akhir kuis.</li>
             </ul>
         </div>
         
@@ -52,6 +69,13 @@ const title = "BBC Ultra Quiz - English Expressions";
         <div id="q-body-area">
             <div id="q-content"></div>
             <div id="q-feedback"></div>
+        </div>
+
+        <div id="q-timeout" style="display: none; text-align: center;">
+            <div style="font-size: 50px; margin-bottom: 10px;">⏰</div>
+            <h2 style="color: #ef4444; margin: 0; font-weight: 800;">Waktu Telah Habis!</h2>
+            <p style="color: #64748b; font-weight: 500; margin-top: 10px;">Mohon maaf, Anda melewati batas waktu 3 menit. Silakan mulai kuis dari awal.</p>
+            <button onclick="window.location.reload()" class="btn-retry" style="background: #ef4444;">Ulangi Kuis</button>
         </div>
 
         <div id="q-result" style="display: none; text-align: center;">
@@ -83,7 +107,7 @@ const title = "BBC Ultra Quiz - English Expressions";
     #bbc-quiz-ultra {
         max-width: 500px;
         width: 100%;
-        margin: 20px;
+        margin: 40px 20px;
         background: #ffffff;
         border-radius: 24px;
         padding: 40px;
@@ -91,28 +115,47 @@ const title = "BBC Ultra Quiz - English Expressions";
         border: 1px solid #f1f5f9;
         min-height: 420px;
         box-sizing: border-box;
+        overflow: hidden;
+        position: relative;
     }
 
-    .instruction-box {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 30px;
+    /* CSS TIMER PILL */
+    #quiz-timer-container {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
     }
+    .timer-pill {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        padding: 6px 14px;
+        border-radius: 50px;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 700;
+        font-size: 14px;
+        color: #1e293b;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .timer-low { color: #ef4444; border-color: #fecaca; background: #fef2f2; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.7; } }
+
+    .quiz-banner {
+        margin: -40px -40px 30px -40px;
+        width: calc(100% + 80px);
+        height: 180px;
+        overflow: hidden;
+    }
+    .quiz-banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .instruction-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 30px; }
 
     .btn-start {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 18px 32px;
-        border-radius: 16px;
-        font-weight: 700;
-        cursor: pointer;
-        width: 100%;
-        font-size: 16px;
-        font-family: inherit;
-        transition: 0.3s;
+        background: #007bff; color: white; border: none; padding: 18px 32px; border-radius: 16px;
+        font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s;
     }
     .btn-start:hover { background: #0056b3; transform: translateY(-2px); }
 
@@ -120,20 +163,18 @@ const title = "BBC Ultra Quiz - English Expressions";
     #q-progress-bar { height: 100%; background: #007bff; width: 0%; transition: 0.4s ease; }
     #q-status { font-size: 13px; color: #94a3b8; text-align: right; margin: 10px 0 30px 0; font-weight: 700; }
     
-    /* REVISI: font-weight diubah menjadi 400 agar teks tipis/biasa */
     .q-text { font-size: 20px; font-weight: 400; color: #1e293b; margin-bottom: 30px; text-align: left; line-height: 1.4; }
     
     .btn-opt {
         display: block; width: 100%; padding: 18px 24px; margin: 12px 0;
         border: 1px solid #e2e8f0; border-radius: 16px; background: #fff;
-        cursor: pointer; text-align: left; font-size: 16px; font-family: inherit; 
-        transition: all 0.2s ease; color: #475569; font-weight: 500;
+        cursor: pointer; text-align: left; font-size: 16px; transition: 0.2s ease; color: #475569; font-weight: 500;
     }
     .btn-opt:hover:not(:disabled) { border-color: #007bff; background: #f0f7ff; color: #007bff; }
     .btn-opt:disabled { opacity: 0.7; cursor: not-allowed; }
     
-    .input-text { width: 100%; padding: 18px; border: 1px solid #e2e8f0; border-radius: 16px; font-size: 16px; margin-bottom: 15px; outline: none; box-sizing: border-box; font-family: inherit;}
-    .btn-submit-q { background: #007bff; color: #fff; border: none; padding: 18px; border-radius: 16px; width: 100%; font-weight: 700; cursor: pointer; font-size: 16px; }
+    .input-text { width: 100%; padding: 18px; border: 1px solid #e2e8f0; border-radius: 16px; font-size: 16px; margin-bottom: 15px; outline: none; box-sizing: border-box; }
+    .btn-submit-q { background: #007bff; color: #fff; border: none; padding: 18px; border-radius: 16px; width: 100%; font-weight: 700; cursor: pointer; }
     
     #q-feedback { margin-top: 20px; display: none; padding: 18px; border-radius: 16px; font-size: 15px; font-weight: 600; }
     .alert-win { background: #dcfce7; color: #166534; }
@@ -142,17 +183,12 @@ const title = "BBC Ultra Quiz - English Expressions";
     .final-score { font-size: 80px; font-weight: 900; color: #007bff; margin: 15px 0; line-height: 1; }
     .btn-retry { background: #1e293b; color: #fff; border: none; padding: 16px 40px; border-radius: 50px; cursor: pointer; font-weight: 700; margin-top: 25px; font-size: 16px; }
 
-    .spinner {
-        width: 40px; height: 40px;
-        border: 4px solid #f3f3f3; border-top: 4px solid #007bff;
-        border-radius: 50%; animation: spin 1s linear infinite;
-    }
+    .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
 
 <script is:inline>
 (function() {
-    // DATA SOAL (TETAP SAMA)
     const questions = [
         { type: "mcq", q: "A: How do you do?<br>B: ___", opts: ["How do you do?", "I'm fine", "Pretty good"], a: "How do you do?" },
         { type: "mcq", q: "Apa yang kamu katakan ketika bertemu teman lama setelah lama tidak berjumpa?: ___", opts: ["Nice to meet you", "Long time no see!", "What's going on?"], a: "Long time no see!" },
@@ -173,6 +209,8 @@ const title = "BBC Ultra Quiz - English Expressions";
 
     let current = 0;
     let score = 0;
+    let timeLeft = 180; // 3 Menit dalam detik
+    let timerId = null;
 
     function initQuiz() {
         const loader = document.getElementById('quiz-loader');
@@ -186,8 +224,38 @@ const title = "BBC Ultra Quiz - English Expressions";
     document.getElementById('start-btn').onclick = function() {
         document.getElementById('quiz-welcome').style.display = 'none';
         document.getElementById('quiz-main-content').style.display = 'block';
+        document.getElementById('quiz-timer-container').style.display = 'block';
+        startTimer();
         showQuestion();
     };
+
+    function startTimer() {
+        const display = document.getElementById('timer-display');
+        const pill = document.querySelector('.timer-pill');
+        
+        timerId = setInterval(() => {
+            timeLeft--;
+            
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            if (timeLeft <= 30) pill.classList.add('timer-low');
+
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                showTimeOut();
+            }
+        }, 1000);
+    }
+
+    function showTimeOut() {
+        document.getElementById('q-body-area').style.display = 'none';
+        document.querySelector('.q-header').style.display = 'none';
+        document.getElementById('quiz-timer-container').style.display = 'none';
+        document.getElementById('q-timeout').style.display = 'block';
+        document.getElementById('snd-wrong').play().catch(() => {});
+    }
 
     function showQuestion() {
         const q = questions[current];
@@ -237,25 +305,20 @@ const title = "BBC Ultra Quiz - English Expressions";
     };
 
     function showResult() {
+        clearInterval(timerId); // Stop timer when finished
+        document.getElementById('quiz-timer-container').style.display = 'none';
         document.getElementById('q-body-area').style.display = 'none';
         document.querySelector('.q-header').style.display = 'none';
         document.getElementById('q-result').style.display = 'block';
         document.getElementById('score-num').innerText = score;
         
         let msg = "";
-        
-        // LOGIKA CONFETTI & EFEK BERHASIL SEMPURNA
         if (score === questions.length) {
             msg = "WOW! Perfect Score! You're a true English Expert! 🏆";
             document.getElementById('result-title').innerText = "PERFECT SCORE!";
-            
-            // TAMBAHAN: Jalankan suara berhasil sempurna
             document.getElementById('snd-perfect').play().catch(() => {});
-
-            // Trigger Confetti
             const duration = 3 * 1000;
             const end = Date.now() + duration;
-
             (function frame() {
               confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#007bff', '#28a745'] });
               confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#007bff', '#28a745'] });
@@ -264,7 +327,6 @@ const title = "BBC Ultra Quiz - English Expressions";
         } else {
             msg = score >= 12 ? "Excellent! You're almost there." : (score >= 8 ? "Good job! Keep practicing." : "Don't give up! Study more and try again.");
         }
-        
         document.getElementById('feedback-summary').innerText = msg;
     }
 
