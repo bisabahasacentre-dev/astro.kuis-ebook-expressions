@@ -208,13 +208,12 @@ const title = "BBC Ultra Quiz - English Expressions";
         { type: "mcq", q: "Apa yang akan kamu katakan jika kamu ingin memberi kembalian ketika membayar?", opts: ["Take away, please", "Keep the change!", "It's on me"], a: "Keep the change!" },
         { type: "mcq", q: "Kamu pengen nyobain pizza temen yang keliatannya enak banget.<br><br><i>Gimana cara bilangnya?<i>", opts: ["Would you like to have some more?", "Can I get some more? ", "May I have some? "], a: "May I have some? / Can I have some?" }, 
         { type: "fill", q: "<b>Waiter:</b> 'Are you ready to order, Sir?'<br><b>You:</b> 'Yes. (____) the grilled chicken and a lemon tea.'<br><br><i>(Petunjuk: Kamu ingin memesan sesuatu)</i>", a: "Can I have / Can I order / I'd like to have / I want to have / I want to order / I'd like to order"},
-        { type: "fill", q: "<b>Friend:</b> 'How is your soup? Is it good?'<br><b>You:</b> 'Actually, no. Karena (____) dan rasanya tawar sekali.'", a: "tasteless"},
-        { type: "fill", q: "<b>Waiter:</b> 'Dessert?'<br><b>You:</b> 'No thanks. (____) I can't eat another bite.'", a: "I'm stuffed"},
-        { type: "fill", q: "<b>You:</b> 'Restroom? (____).'<br><b>Waiter:</b> 'Beside the cashier.'", a: "Where can I wash my hands?"},
+        { type: "fill", q: "<b>Friend:</b> 'How is your soup? Is it good?'<br><b>You:</b> 'Actually, no. Because it's (____) and it feels like no salt at all.'", a: "tasteless"},
+        { type: "fill", q: "<b>Waiter:</b> 'Would you like to order any dessert? Our chocolate cake is the best!'<br><b>You:</b> 'No thanks. (____) so, I can't eat another bite.'", a: "I'm stuffed"},
         { type: "fill", q: "<b>Waiter:</b> 'Dine in?'<br><b>You:</b> 'No, just (____) please.'", a: "to go"},
         { type: "fill", q: "<b>You:</b> 'Soup is too spicy. (____) to make it milder?'", a: "may I have some water / can I get some water / may I get some water"},
-        { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa yang dimaksud oleh Person B?</i>", audio: "audio/Audio Quiz_Atherestaurant_01.MP3", opts: ["He wants Person A to pay", "He is going to pay for the meal", "He wants to split the bill"], a: "He is going to pay for the meal" },
-        { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa pendapat Person B tentang chicken-nya?</i>", audio: "audio/Audio Quiz_Atherestaurant_02.MP3", opts: ["It's tasteless", "It's sour", "It's delicious"], a: "It's delicious" },
+        { type: "listening", q: "<b>Dengarkan!</b><br>Apa yang dimaksud oleh Person B?", audio: "audio/Audio Quiz_Atherestaurant_01.MP3", opts: ["He wants Person A to pay", "He is going to pay for the meal", "He wants to split the bill"], a: "He is going to pay for the meal" },
+        { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa pendapat Person B tentang chicken-nya?", audio: "audio/Audio Quiz_Atherestaurant_02.MP3", opts: ["It's tasteless", "It's sour", "It's delicious"], a: "It's delicious" },
     ];
 
     function shuffleQuestions(array) {
