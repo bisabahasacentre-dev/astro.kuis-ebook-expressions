@@ -119,7 +119,6 @@ const title = "BBC Ultra Quiz - English Expressions";
         position: relative;
     }
 
-    /* CSS TIMER PILL */
     #quiz-timer-container {
         position: absolute;
         top: 20px;
@@ -199,13 +198,24 @@ const title = "BBC Ultra Quiz - English Expressions";
         { type: "mcq", q: "Kamu pengen nyobain pizza temen yang keliatannya enak banget.<br><br><i>Gimana cara bilangnya?<i>", opts: ["Would you like to have some more?", "Can I get some more? ", "May I have some? "], a: "May I have some?" }, 
         { type: "fill", q: "<b>Waiter:</b> 'Are you ready to order, Sir?'<br><b>You:</b> 'Yes. (____) the grilled chicken and a lemon tea.'<br><br><i>(Petunjuk: Kamu ingin memesan sesuatu)</i>", a: "Can I have/Can I order/I'd like to have"},
         { type: "fill", q: "<b>Friend:</b> 'How is your soup? Is it good?'<br><b>You:</b> 'Actually, no. Because it's  (____) and it feels like there is no salt at all.'<br><br><i>(Petunjuk: Rasanya hambar/nggak ada rasa)</i>", a: "tasteless"},
-        { type: "fill", q: "<b>Waiter:</b> 'Would you like to order any dessert? Our chocolate cake is the best'<br><b>You:</b> 'Oh, no thanks.  (____) I can't eat another bite.'<br><br><i>(Petunjuk: Kamu mau cuci tangan)</i>", a: "where can I wash my hand?"},
-        { type: "fill", q: "<b>You:</b> 'Excuse me, I'm looking for the restroom. (____).'<br><b>Waiter:</b> 'It's just beside the cashier, Sir.'<br><br><i>(Petunjuk: Kamu sudah kenyang banget/begah)</i>", a: "I'm stuffed"},
+        { type: "fill", q: "<b>Waiter:</b> 'Would you like to order any dessert? Our chocolate cake is the best'<br><b>You:</b> 'Oh, no thanks.  (____) I can't eat another bite.'<br><br><i>(Petunjuk: Kamu sudah kenyang banget/begah)</i>", a: "I'm stuffed"},
+        { type: "fill", q: "<b>You:</b> 'Excuse me, I'm looking for the restroom. (____).'<br><b>Waiter:</b> 'It's just beside the cashier, Sir.'<br><br><i>(Petunjuk: Kamu mau cuci tangan)</i>", a: "Where can I wash my hands?"},
         { type: "fill", q: "<b>Waiter:</b> 'Would you like to dine in?.'<br><b>You:</b> ' No, just (____)please. I want to eat it at my office.'<br><br><i>(Petunjuk: Kamu mau bawa pulang makanannya versi Amerika)</i>", a: "to go"},
         { type: "fill", q: "<b>You:</b> 'Excuse me, my soup is a bit too spicy (____) to make it milder?.'<br><br><i>(Petunjuk: Kamu minta air)</i>", a: "may I have some water/can I get some water?/can I have some water?/may I get some water?"},
-        { type: "listening", q: "<b>Person A:</b> 'Can I get the bill?.'<br><b>Person B:</b> 'No, don't worry. It's on me!<br><br><i>(Apa yang dimaksud oleh Person B?)</i>", audio: "Audio Quiz_Atherestaurant_01.MP3", opts: ["He wants Person A to pay", "He is going to pay for the meal", "He wants to split the bill"], a: "He is going to pay for the meal" },
-        { type: "listening", q: "Listen! Salam perpisahan apa yang digunakan?", audio: "https://www.kampunginggrisbbc.com/wp-content/uploads/2026/03/Audio-Quiz_GreetnSmalltalk_03.mp3", opts: ["Have a good day", "See you", "Catch you later"], a: "Catch you later" }
+        { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa yang dimaksud oleh Person B?</i>", audio: "audio/Audio Quiz_Atherestaurant_01.MP3", opts: ["He wants Person A to pay", "She is going to pay for the meal", "She wants to split the bill"], a: "She is going to pay for the meal" },
+        { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa yang dikatakan oleh Person B tentang grilled chicken?<i>", audio: "audio/Audio Quiz_Atherestaurant_02.MP3", opts: ["It's tasteless", "It's sour", "It's delicious"], a: "It's delicious" },
     ];
+
+    // --- FUNGSI ACAK (Fisher-Yates Shuffle) ---
+    function shuffleQuestions(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Acak soal segera saat skrip dimuat
+    shuffleQuestions(questions);
 
     let current = 0;
     let score = 0;
@@ -266,7 +276,7 @@ const title = "BBC Ultra Quiz - English Expressions";
         document.getElementById('q-progress-bar').style.width = ((current + 1) / questions.length * 100) + "%";
         let html = `<div class="q-text">${q.q}</div>`;
         if (q.type === "listening") {
-            html = `<div class="audio-player"><audio controls autoplay><source src="${q.audio}"></audio></div>` + html;
+            html = `<div class="audio-player" style="margin-bottom: 20px;"><audio controls autoplay><source src="${q.audio}"></audio></div>` + html;
         }
         if (q.type === "mcq" || q.type === "listening") {
             q.opts.forEach(o => { html += `<button class="btn-opt" onclick="verify('${o.replace(/'/g, "\\'")}')">${o}</button>`; });
@@ -282,57 +292,50 @@ const title = "BBC Ultra Quiz - English Expressions";
     }
 
     window.verify = function(userAns) {
-    if (!userAns || document.querySelectorAll('.btn-opt:disabled').length > 0) return;
+        if (!userAns || document.querySelectorAll('.btn-opt:disabled').length > 0) return;
 
-    const q = questions[current];
-    const feedbackArea = document.getElementById('q-feedback');
+        const q = questions[current];
+        const feedbackArea = document.getElementById('q-feedback');
 
-    // --- FUNGSI NORMALISASI (Agar lebih toleran) ---
-    const normalize = (text) => {
-        return text
-            .toLowerCase() // Ubah jadi huruf kecil semua
-            .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "") // Hapus tanda baca (titik, koma, dsb)
-            .replace(/\s+/g, " ") // Ubah spasi ganda/berlebih menjadi satu spasi saja
-            .trim(); // Hapus spasi di awal & akhir
+        const normalize = (text) => {
+            return text
+                .toLowerCase()
+                .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "")
+                .replace(/\s+/g, " ")
+                .trim();
+        };
+
+        const cleanUserAns = normalize(userAns);
+        const correctAnswers = q.a.split('/').map(ans => normalize(ans));
+        const isCorrect = correctAnswers.includes(cleanUserAns);
+
+        document.querySelectorAll('.btn-opt, .btn-submit-q').forEach(b => b.disabled = true);
+        feedbackArea.style.display = 'block';
+
+        if (isCorrect) {
+            score++;
+            feedbackArea.innerHTML = "✅ Correct! Well done.";
+            feedbackArea.className = "alert-win";
+            document.getElementById('snd-correct').play().catch(() => {});
+        } else {
+            const displayAnswer = q.a.split('/')[0]; 
+            feedbackArea.innerHTML = `❌ Incorrect. Correct answer: <strong>${displayAnswer}</strong>`;
+            feedbackArea.className = "alert-loss";
+            document.getElementById('snd-wrong').play().catch(() => {});
+        }
+
+        setTimeout(() => {
+            current++;
+            if (current < questions.length) { 
+                showQuestion(); 
+            } else { 
+                showResult(); 
+            }
+        }, 1800);
     };
 
-    const cleanUserAns = normalize(userAns);
-    
-    // Pisahkan jawaban benar berdasarkan "/" dan bersihkan masing-masing
-    const correctAnswers = q.a.split('/').map(ans => normalize(ans));
-
-    // Cek apakah jawaban user cocok dengan salah satu kemungkinan jawaban benar
-    const isCorrect = correctAnswers.includes(cleanUserAns);
-
-    // --- LOGIKA FEEDBACK UI ---
-    document.querySelectorAll('.btn-opt, .btn-submit-q').forEach(b => b.disabled = true);
-    feedbackArea.style.display = 'block';
-
-    if (isCorrect) {
-        score++;
-        feedbackArea.innerHTML = "✅ Correct! Well done.";
-        feedbackArea.className = "alert-win";
-        document.getElementById('snd-correct').play().catch(() => {});
-    } else {
-        // Tampilkan jawaban pertama sebagai referensi jika salah
-        const displayAnswer = q.a.split('/')[0]; 
-        feedbackArea.innerHTML = `❌ Incorrect. Correct answer: <strong>${displayAnswer}</strong>`;
-        feedbackArea.className = "alert-loss";
-        document.getElementById('snd-wrong').play().catch(() => {});
-    }
-
-    setTimeout(() => {
-        current++;
-        if (current < questions.length) { 
-            showQuestion(); 
-        } else { 
-            showResult(); 
-        }
-    }, 1800);
-};
-
     function showResult() {
-        clearInterval(timerId); // Stop timer when finished
+        clearInterval(timerId);
         document.getElementById('quiz-timer-container').style.display = 'none';
         document.getElementById('q-body-area').style.display = 'none';
         document.querySelector('.q-header').style.display = 'none';
