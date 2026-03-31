@@ -169,7 +169,18 @@ const title = "BBC Ultra Quiz - English Expressions";
         border: 1px solid #e2e8f0; border-radius: 16px; background: #fff;
         cursor: pointer; text-align: left; font-size: 16px; transition: 0.2s ease; color: #475569; font-weight: 500;
     }
-    .btn-opt:hover:not(:disabled) { border-color: #007bff; background: #f0f7ff; color: #007bff; }
+
+    /* PERBAIKAN UI: Hover dibuat netral (hanya garis sedikit lebih gelap) */
+    .btn-opt:hover:not(:disabled) { border-color: #cbd5e1; background: #fff; color: #475569; }
+
+    /* PERBAIKAN UI: Highlight biru hanya saat dipilih/diklik */
+    .btn-opt.is-selected { 
+        border-color: #007bff !important; 
+        background: #f0f7ff !important; 
+        color: #007bff !important; 
+        opacity: 1 !important;
+    }
+
     .btn-opt:disabled { opacity: 0.7; cursor: not-allowed; }
     
     .input-text { width: 100%; padding: 18px; border: 1px solid #e2e8f0; border-radius: 16px; font-size: 16px; margin-bottom: 15px; outline: none; box-sizing: border-box; }
@@ -202,11 +213,10 @@ const title = "BBC Ultra Quiz - English Expressions";
         { type: "fill", q: "<b>You:</b> 'Excuse me, I'm looking for the restroom. (____).'<br><b>Waiter:</b> 'It's just beside the cashier, Sir.'<br><br><i>(Petunjuk: Kamu mau cuci tangan)</i>", a: "Where can I wash my hands?"},
         { type: "fill", q: "<b>Waiter:</b> 'Would you like to dine in?.'<br><b>You:</b> ' No, just (____)please. I want to eat it at my office.'<br><br><i>(Petunjuk: Kamu mau bawa pulang makanannya versi Amerika)</i>", a: "to go"},
         { type: "fill", q: "<b>You:</b> 'Excuse me, my soup is a bit too spicy (____) to make it milder?.'<br><br><i>(Petunjuk: Kamu minta air)</i>", a: "may I have some water/can I get some water?/can I have some water?/may I get some water?"},
-        { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa yang dimaksud oleh Person B?</i>", audio: "audio/Audio Quiz_Atherestaurant_01.MP3", opts: ["He wants Person A to pay", "She is going to pay for the meal", "She wants to split the bill"], a: "She is going to pay for the meal" },
+        { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa yang dimaksud oleh Person B?</i>", audio: "audio/Audio Quiz_Atherestaurant_01.MP3", opts: ["He wants Person A to pay", "He is going to pay for the meal", "He wants to split the bill"], a: "He is going to pay for the meal" },
         { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa yang dikatakan oleh Person B tentang grilled chicken?<i>", audio: "audio/Audio Quiz_Atherestaurant_02.MP3", opts: ["It's tasteless", "It's sour", "It's delicious"], a: "It's delicious" },
     ];
 
-    // --- FUNGSI ACAK (Fisher-Yates Shuffle) ---
     function shuffleQuestions(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -214,12 +224,11 @@ const title = "BBC Ultra Quiz - English Expressions";
         }
     }
 
-    // Acak soal segera saat skrip dimuat
     shuffleQuestions(questions);
 
     let current = 0;
     let score = 0;
-    let timeLeft = 180; // 3 Menit dalam detik
+    let timeLeft = 180; 
     let timerId = null;
 
     function initQuiz() {
@@ -245,13 +254,10 @@ const title = "BBC Ultra Quiz - English Expressions";
         
         timerId = setInterval(() => {
             timeLeft--;
-            
             let mins = Math.floor(timeLeft / 60);
             let secs = timeLeft % 60;
             display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-
             if (timeLeft <= 30) pill.classList.add('timer-low');
-
             if (timeLeft <= 0) {
                 clearInterval(timerId);
                 showTimeOut();
@@ -279,7 +285,8 @@ const title = "BBC Ultra Quiz - English Expressions";
             html = `<div class="audio-player" style="margin-bottom: 20px;"><audio controls autoplay><source src="${q.audio}"></audio></div>` + html;
         }
         if (q.type === "mcq" || q.type === "listening") {
-            q.opts.forEach(o => { html += `<button class="btn-opt" onclick="verify('${o.replace(/'/g, "\\'")}')">${o}</button>`; });
+            // PERBAIKAN UI: Menambahkan 'event' pada pemanggilan verify
+            q.opts.forEach(o => { html += `<button class="btn-opt" onclick="verify('${o.replace(/'/g, "\\'")}', event)">${o}</button>`; });
         } else {
             html += `<input type="text" id="ans-input" class="input-text" placeholder="Type answer..." autofocus><button class="btn-submit-q" id="submit-btn">Submit Answer</button>`;
         }
@@ -291,11 +298,17 @@ const title = "BBC Ultra Quiz - English Expressions";
         }
     }
 
-    window.verify = function(userAns) {
+    // PERBAIKAN UI: Fungsi verify sekarang menerima parameter event (e)
+    window.verify = function(userAns, e) {
         if (!userAns || document.querySelectorAll('.btn-opt:disabled').length > 0) return;
 
         const q = questions[current];
         const feedbackArea = document.getElementById('q-feedback');
+
+        // PERBAIKAN UI: Tambahkan class highlight biru hanya pada tombol yang diklik
+        if (e && e.currentTarget && e.currentTarget.classList.contains('btn-opt')) {
+            e.currentTarget.classList.add('is-selected');
+        }
 
         const normalize = (text) => {
             return text
