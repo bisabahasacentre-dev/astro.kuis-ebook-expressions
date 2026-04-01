@@ -1,0 +1,288 @@
+---
+// Bagian Frontmatter Astro
+const title = "BBC Ultra Quiz - English Expressions";
+---
+
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" is:inline></script>
+</head>
+<body>
+
+<div id="bbc-quiz-ultra">
+    <div class="quiz-banner">
+        <img 
+            src="/Images/Banner-kuis-web.webp" 
+            alt="English Learning Banner"
+            loading="lazy"
+            width="500"
+            height="180"
+        />
+    </div>
+
+    <div id="quiz-timer-container" style="display: none;">
+        <div class="timer-pill">
+            <span class="timer-icon">⏱️</span>
+            <span id="timer-display">05:00</span>
+        </div>
+    </div>
+
+    <div id="quiz-loader" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px; color: #94a3b8; font-size: 14px; font-weight: 500;">Let's get ready...</p>
+    </div>
+
+    <div id="quiz-welcome" style="display: none; text-align: center;">
+        <h1 style="color: #007bff; font-size: 1.5rem; font-weight: 800; margin-bottom: 5px;">Quiz Time!</h1>
+        <h1 style="color: #007bff; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; margin-top: 0;">at The Office</h1>
+        
+        <div class="instruction-box">
+            <h3 style="font-size: 14px; color: #1e293b; margin-bottom: 12px; font-weight: 700; text-align: left; display: flex; align-items: center; gap: 8px;">
+                <span>📋</span> Instruksi:
+            </h3>
+            <ul style="text-align: left; font-size: 13px; color: #475569; padding-left: 18px; line-height: 1.7; margin: 0; list-style-type: disc;">
+                <li>Total <strong>15 Soal</strong> (Pilihan Ganda, Isian & Listening).</li>
+                <li>Waktu maksimal <strong>5 Menit</strong>.</li>
+                <li>Gunakan Earphone untuk soal Listening.</li>
+                <li>Skor muncul otomatis di akhir kuis.</li>
+            </ul>
+        </div>
+        
+        <button id="start-btn" class="btn-start">Mulai Kuis Sekarang</button>
+    </div>
+
+    <div id="quiz-main-content" style="display: none;">
+        <div class="q-header">
+            <div class="q-progress-bg">
+                <div id="q-progress-bar"></div>
+            </div>
+            <div id="q-status">Memuat soal...</div>
+        </div>
+
+        <div id="q-body-area">
+            <div id="q-content"></div>
+            <div id="q-feedback"></div>
+        </div>
+
+        <div id="q-timeout" style="display: none; text-align: center;">
+            <div style="font-size: 50px; margin-bottom: 10px;">⏰</div>
+            <h2 style="color: #ef4444; margin: 0; font-weight: 800;">Waktu Habis!</h2>
+            <button onclick="window.location.reload()" class="btn-retry" style="background: #ef4444;">Ulangi Kuis</button>
+        </div>
+
+        <div id="q-result" style="display: none; text-align: center;">
+            <h2 id="result-title" style="color: #007bff; margin: 0; font-weight: 800;">Quiz Completed!</h2>
+            <div class="final-score">
+                <span id="score-num">0</span><small style="font-size: 20px; color: #94a3b8;">/15</small>
+            </div>
+            <p id="feedback-summary" style="color: #64748b; font-weight: 600; font-size: 1.1rem; margin-bottom: 20px;"></p>
+            <button onclick="window.location.reload()" class="btn-retry">Ulangi Kuis</button>
+        </div>
+    </div>
+
+    <audio id="snd-correct" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+    <audio id="snd-wrong" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
+    <audio id="snd-perfect" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+</div>
+
+<style is:global>
+    body { background-color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Inter', sans-serif; }
+    #bbc-quiz-ultra { max-width: 500px; width: 100%; margin: 40px 20px; background: #ffffff; border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; min-height: 420px; box-sizing: border-box; position: relative; overflow: hidden; }
+    #quiz-timer-container { display: none; justify-content: center; margin-bottom: 20px; margin-top: -5px; }
+    .timer-pill { background: #f8fafc; padding: 8px 18px; border-radius: 50px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: #1e293b; }
+    .timer-low { color: #ef4444; border-color: #fecaca; background: #fef2f2; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.7; } }
+    .quiz-banner { margin: -40px -40px 30px -40px; width: calc(100% + 80px); height: 180px; overflow: hidden; }
+    .quiz-banner img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 24px 24px 0 0; }
+    @media (max-width: 480px) { #bbc-quiz-ultra { padding: 30px 20px; margin: 20px 10px; border-radius: 20px; } .quiz-banner { height: 130px; margin: -30px -20px 20px -20px; width: calc(100% + 40px); } .quiz-banner img { border-radius: 20px 20px 0 0; } .timer-pill { padding: 6px 14px; font-size: 12px; } .q-text { font-size: 15px; } }
+    .instruction-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 30px; }
+    .btn-start { background: #007bff; color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; }
+    .q-header { margin-bottom: 25px; }
+    .q-progress-bg { width: 100%; height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
+    #q-progress-bar { height: 100%; background: #007bff; width: 0%; transition: 0.4s ease; }
+    #q-status { font-size: 12px; color: #94a3b8; text-align: right; margin: 8px 0 0 0; font-weight: 700; }
+    .q-text { font-size: 16px; font-weight: 400; color: #1e293b; margin-bottom: 30px; line-height: 1.4; }
+    .btn-opt { display: block; width: 100%; padding: 18px; margin: 12px 0; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; cursor: pointer; text-align: left; font-size: 16px; color: #475569; }
+    .btn-opt:hover:not(:disabled) { border-color: #cbd5e1; }
+    .btn-opt.is-selected { border-color: #007bff !important; background: #f0f7ff !important; color: #007bff !important; }
+    .btn-opt:disabled { opacity: 0.7; }
+    .input-text { display: block; margin: 0 auto 15px auto; width: 100%; padding: 18px; border: 1px solid #e2e8f0; border-radius: 16px; font-size: 16px; outline: none; box-sizing: border-box; text-align: center; }
+    .btn-submit-q { display: block; margin: 0 auto; background: #007bff; color: #fff; border: none; padding: 18px; border-radius: 16px; width: 100%; font-weight: 700; cursor: pointer; }
+    #q-feedback { margin-top: 20px; display: none; padding: 18px; border-radius: 16px; font-size: 15px; font-weight: 600; }
+    .alert-win { background: #dcfce7; color: #166534; }
+    .alert-loss { background: #fee2e2; color: #991b1b; }
+    .final-score { font-size: 80px; font-weight: 900; color: #007bff; margin: 15px 0; }
+    .btn-retry { background: #1e293b; color: #fff; border: none; padding: 16px 40px; border-radius: 50px; cursor: pointer; font-weight: 700; margin-top: 25px; }
+    .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
+<script is:inline>
+(function() {
+    const questions = [
+        { type: "mcq", q: "Apa yang akan kamu katakan Ketika teman kerjamu minta bantuan, sedangkan kerjaanmu sendiri lagi numpuk banget sampai pusing.", opts: ["I'm out of the office", "I'm swamped", "Let's call it a day"], a: "I'm swamped" },
+        { type: "mcq", q: "Jam sudah menunjukkan pukul 5 sore, semua tugas penting sudah selesai, dan kamu ingin mengajak rekan kerja untuk pulang.<br><br><i>Apa yang akan kamu katakan?<i>", opts: ["Let's wrap it up ", "Let's call it a day", "What's the deadline?"], a: "Let's call it a day" },
+        { type: "mcq", q: "Kamu ingin menanyakan kabar terbaru tentang tugas yang kamu berikan ke rekan kerja kemarin.<br><br><i>Apa yang akan kamu katakan?<i>", opts: ["I just wanted to follow up", "I'll check it later", "I'm on a call right now"], a: "I just wanted to follow up" },
+        { type: "mcq", q: "Dalam sebuah diskusi, kamu sangat setuju dengan ide bosmu dan merasa pemikiran kalian sudah searah.'<br><br><i>Apa 'Expressions' yang tepat digunakan?<i>", opts: ["It's still up in the air", "I see what you mean, but...", "I'm on the same page"], a: "I'm on the same page" },
+        { type: "mcq", q: "Bagaimana cara bertanya di situasi ketika tiba-tiba koneksi internet Wi-fi di kantormu mati?", opts: ["I'm off the meeting", "Is the Wi-fi down?", "How is the Wi-fi?"], a: "Is the Wi-fi down?" },
+        { type: "mcq", q: "Kamu sedang makan di kantin pada jam istirahat dan mendadak ada telepon masuk dari klien<br><br><i>Bagaimanakah cara menolak panggilannya dengan sopan?<i>", opts: ["Sorry, I'm on leave", "Excuse me, I'll finish it by today", "Pardon, I'm on lunch break"], a: "Pardon, I'm on lunch break" },
+        { type: "mcq", q: "Ada masalah kecil di kantor dan kamu ingin meyakinkan tim bahwa kamu yang akan membereskan masalah itu sendiri.<br><br><i>Apa 'Expressions' yang tepat digunakan?<i>", opts: ["I'll take it over", "I'll handle it", "I'll check it later"], a: "I'll handle it" },
+        { type: "fill", q: "<b>Boss:</b> 'When will you submit the report?'</br><b>You:</b>(__)? I need to manage my time.'</br></br><i>(Petunjuk: Kamu menanyakan tentang kapan batas waktu pengumpulan')</i>", a: "What's the deadline / what is the deadline /What's the deadline? / what is the deadline?" },
+        { type: "fill", q: "<b>Coworker:</b> 'Are you almost at the office?'</br><b>You:</b> 'Sorry, (__) because of the heavy rain.'</b></br></br><i>(Petunjuk: Bagaimana cara mengatakan bahwa kamu sedang terlambat karena hujan deras?)</i>", a: "I'm running late / i am running late / I'm being late / I am being late /  i'm being late" },
+        { type: "fill", q: "<b>Manager:</b> 'Please (__) regarding the project's progress'</br><b>You:</b> 'Sure, I will send you an update every morning.'</b></br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'tetap beri saya update info terbaru' dalam versi formal?)<i>", a: "Keep me in the loop / keep me in the loop / keep me posted / Keep me posted" },
+        { type: "fill", q: "<b>Supervisor:</b> 'Is the event confirmed for next week?.'</br><b>You:</b> 'Not yet, (__) because we are waiting for the budget.''</br></br><i>(Petunjuk: Keadaannya masih belum pasti / masih mengambang)</i>", a: "It's still up in the air / it's still up in the air / It is still up in the air / it is still up in the air" },
+        { type: "fill", q: "<b>Partner:</b> 'Do you want to grab a coffee tomorrow?.'</br><b>You:</b> I afraid I can't because (__) for attending a wedding invitation tomorrow.'</b></br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'Aku sedang ambil hari libur')</i>", a: "I'm taking day off/ I am taking day off / i'm taking day off / i am taking day off" },
+        { type: "fill", q: "<b>You:</b> 'Sorry, I can't talk any longer. Because (__) with a client.'</br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'Aku lagi ada telepon sekarang')</i>", a: "I'm on call right now / I am on call right now / i'm on call right now / i am on call right now" },
+        { type: "listening", q: "<b>Dengarkan!</b><br>Apa yang akan dilakukan oleh 'Person B?'", audio: "audio/Audio Quiz_Office_01.MP3", opts: ["He is going to start the meeting again", "He is going to complete his task before the day ends", "He is going to take a break" ], a: "He is going to complete his task before the day ends" },
+        { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa yang dirasakan oleh 'Person A' tentang meetingnya?</i>", audio: "audio/Audio Quiz_Office_01.MP3", opts: ["He is excited and waiting for the meeting", "He is busy and wants to cancel", "He is unhappy about the meeting"], a: "He is excited and waiting for the meeting" },
+    ];
+
+    function shuffleQuestions(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    shuffleQuestions(questions);
+
+    let current = 0, score = 0, timeLeft = 300, timerId = null;
+
+    function initQuiz() {
+        setTimeout(() => {
+            document.getElementById('quiz-loader').style.display = 'none';
+            document.getElementById('quiz-welcome').style.display = 'block';
+        }, 1200);
+    }
+
+    document.getElementById('start-btn').onclick = function() {
+        document.getElementById('quiz-welcome').style.display = 'none';
+        document.getElementById('quiz-main-content').style.display = 'block';
+        document.getElementById('quiz-timer-container').style.display = 'flex';
+        startTimer();
+        showQuestion();
+    };
+
+    function startTimer() {
+        const display = document.getElementById('timer-display');
+        const pill = document.querySelector('.timer-pill');
+        timerId = setInterval(() => {
+            timeLeft--;
+            let mins = Math.floor(timeLeft / 60), secs = timeLeft % 60;
+            display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (timeLeft <= 30) pill.classList.add('timer-low');
+            if (timeLeft <= 0) { clearInterval(timerId); showTimeOut(); }
+        }, 1000);
+    }
+
+    function showTimeOut() {
+        document.querySelector('.q-header').style.display = 'none';
+        document.getElementById('q-body-area').style.display = 'none';
+        document.getElementById('quiz-timer-container').style.display = 'none';
+        document.getElementById('q-timeout').style.display = 'block';
+        document.getElementById('snd-wrong').play().catch(() => {});
+    }
+
+    function showQuestion() {
+        const q = questions[current];
+        const contentArea = document.getElementById('q-content');
+        document.getElementById('q-feedback').style.display = 'none';
+        document.getElementById('q-status').innerText = `Question ${current + 1} of ${questions.length}`;
+        document.getElementById('q-progress-bar').style.width = ((current + 1) / questions.length * 100) + "%";
+        
+        let html = `<div class="q-text">${q.q}</div>`;
+        if (q.type === "listening") {
+            html = `<div style="margin-bottom:20px;"><audio controls autoplay><source src="${q.audio}"></audio></div>` + html;
+        }
+        if (q.type === "mcq" || q.type === "listening") {
+            q.opts.forEach(o => { html += `<button class="btn-opt" onclick="verify('${o.replace(/'/g, "\\'")}', event)">${o}</button>`; });
+        } else {
+            html += `<div style="text-align: center; width: 100%;">
+                        <input type="text" id="ans-input" class="input-text" placeholder="Type answer..." autofocus>
+                        <button class="btn-submit-q" id="submit-btn">Submit</button>
+                     </div>`;
+        }
+        contentArea.innerHTML = html;
+        const input = document.getElementById('ans-input');
+        if (input) {
+            input.addEventListener("keypress", (e) => { if (e.key === "Enter") verify(input.value); });
+            document.getElementById('submit-btn').onclick = () => verify(input.value);
+        }
+    }
+
+    window.verify = function(userAns, e) {
+        if (!userAns || document.querySelectorAll('.btn-opt:disabled').length > 0) return;
+        const q = questions[current], feedbackArea = document.getElementById('q-feedback');
+        if (e && e.currentTarget && e.currentTarget.classList.contains('btn-opt')) e.currentTarget.classList.add('is-selected');
+
+        const normalize = (t) => t.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ").trim();
+        const cleanUserAns = normalize(userAns);
+        const isCorrect = q.a.split('/').map(ans => normalize(ans)).includes(cleanUserAns);
+
+        document.querySelectorAll('.btn-opt, .btn-submit-q').forEach(b => b.disabled = true);
+        feedbackArea.style.display = 'block';
+
+        if (isCorrect) {
+            score++;
+            feedbackArea.innerHTML = "✅ Correct!"; 
+            feedbackArea.className = "alert-win";
+            document.getElementById('snd-correct').play().catch(() => {});
+        } else {
+            feedbackArea.innerHTML = `❌ Wrong. Answer: <strong>${q.a.split('/')[0]}</strong>`;
+            feedbackArea.className = "alert-loss";
+            document.getElementById('snd-wrong').play().catch(() => {});
+        }
+
+        setTimeout(() => {
+            current++;
+            if (current < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }, 1400);
+    };
+
+    function showResult() {
+        clearInterval(timerId);
+        // MATIKAN ELEMEN INTERFACE LAIN
+        document.getElementById('quiz-timer-container').style.display = 'none';
+        document.querySelector('.q-header').style.display = 'none';
+        document.getElementById('q-body-area').style.display = 'none';
+        
+        // TAMPILKAN HASIL
+        const resArea = document.getElementById('q-result');
+        resArea.style.display = 'block';
+        document.getElementById('score-num').innerText = score;
+
+        let feedbackMsg = "";
+        if (score === questions.length) {
+            feedbackMsg = "PERFECT! Congrats, you did it! 🌟";
+            document.getElementById('snd-perfect').play().catch(() => {});
+            confetti({
+                particleCount: 200,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: ['#007bff', '#28a745', '#ffc107']
+            });
+        } else if (score >= 12) {
+            feedbackMsg = "Excellent! You did a good job! 🔥";
+        } else if (score >= 8) {
+            feedbackMsg = "Not bad! Keep practicing a lot! 👍";
+        } else {
+            feedbackMsg = "Don't give up! Let's give another shot. 💪";
+        }
+
+        document.getElementById('feedback-summary').innerText = feedbackMsg;
+    }
+
+    initQuiz();
+})();
+</script>
+</body>
+</html>
