@@ -91,87 +91,15 @@ const title = "BBC Ultra Quiz - English Expressions";
 </div>
 
 <style is:global>
-    body {
-        background-color: #f8fafc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-    }
-
-    #bbc-quiz-ultra {
-        max-width: 500px;
-        width: 100%;
-        margin: 40px 20px;
-        background: #ffffff;
-        border-radius: 24px;
-        padding: 40px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-        border: 1px solid #f1f5f9;
-        min-height: 420px;
-        box-sizing: border-box;
-        position: relative;
-        overflow: hidden;
-    }
-
-    #quiz-timer-container {
-        display: none;
-        justify-content: center;
-        margin-bottom: 20px;
-        margin-top: -5px;
-    }
-
-    .timer-pill {
-        background: #f8fafc;
-        padding: 8px 18px;
-        border-radius: 50px;
-        border: 1px solid #e2e8f0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 800;
-        font-size: 14px;
-        color: #1e293b;
-    }
-
+    body { background-color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Inter', sans-serif; }
+    #bbc-quiz-ultra { max-width: 500px; width: 100%; margin: 40px 20px; background: #ffffff; border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; min-height: 420px; box-sizing: border-box; position: relative; overflow: hidden; }
+    #quiz-timer-container { display: none; justify-content: center; margin-bottom: 20px; margin-top: -5px; }
+    .timer-pill { background: #f8fafc; padding: 8px 18px; border-radius: 50px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: #1e293b; }
     .timer-low { color: #ef4444; border-color: #fecaca; background: #fef2f2; animation: blink 1s infinite; }
     @keyframes blink { 50% { opacity: 0.7; } }
-
-    .quiz-banner {
-        margin: -40px -40px 30px -40px;
-        width: calc(100% + 80px);
-        height: 180px;
-        overflow: hidden;
-    }
-
-    .quiz-banner img { 
-        width: 100%; 
-        height: 100%; 
-        object-fit: cover; 
-        display: block; 
-        border-radius: 24px 24px 0 0;
-    }
-
-    @media (max-width: 480px) {
-        #bbc-quiz-ultra {
-            padding: 30px 20px;
-            margin: 20px 10px;
-            border-radius: 20px;
-        }
-        .quiz-banner {
-            height: 130px;
-            margin: -30px -20px 20px -20px;
-            width: calc(100% + 40px);
-        }
-        .quiz-banner img {
-            border-radius: 20px 20px 0 0;
-        }
-        .timer-pill { padding: 6px 14px; font-size: 12px; }
-        .q-text { font-size: 15px; }
-    }
-
+    .quiz-banner { margin: -40px -40px 30px -40px; width: calc(100% + 80px); height: 180px; overflow: hidden; }
+    .quiz-banner img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 24px 24px 0 0; }
+    @media (max-width: 480px) { #bbc-quiz-ultra { padding: 30px 20px; margin: 20px 10px; border-radius: 20px; } .quiz-banner { height: 130px; margin: -30px -20px 20px -20px; width: calc(100% + 40px); } .quiz-banner img { border-radius: 20px 20px 0 0; } .timer-pill { padding: 6px 14px; font-size: 12px; } .q-text { font-size: 15px; } }
     .instruction-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 30px; }
     .btn-start { background: #007bff; color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; }
     .q-header { margin-bottom: 25px; }
@@ -179,39 +107,12 @@ const title = "BBC Ultra Quiz - English Expressions";
     #q-progress-bar { height: 100%; background: #007bff; width: 0%; transition: 0.4s ease; }
     #q-status { font-size: 12px; color: #94a3b8; text-align: right; margin: 8px 0 0 0; font-weight: 700; }
     .q-text { font-size: 16px; font-weight: 400; color: #1e293b; margin-bottom: 30px; line-height: 1.4; }
-    
     .btn-opt { display: block; width: 100%; padding: 18px; margin: 12px 0; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; cursor: pointer; text-align: left; font-size: 16px; color: #475569; }
     .btn-opt:hover:not(:disabled) { border-color: #cbd5e1; }
     .btn-opt.is-selected { border-color: #007bff !important; background: #f0f7ff !important; color: #007bff !important; }
     .btn-opt:disabled { opacity: 0.7; }
-
-    /* PERBAIKAN POSISI TENGAH INPUT & SUBMIT */
-    .input-text { 
-        display: block; 
-        margin: 0 auto 15px auto; /* Centered with bottom margin */
-        width: 100%; 
-        padding: 18px; 
-        border: 1px solid #e2e8f0; 
-        border-radius: 16px; 
-        font-size: 16px; 
-        outline: none; 
-        box-sizing: border-box;
-        text-align: center; /* Teks di dalam input juga center */
-    }
-
-    .btn-submit-q { 
-        display: block;
-        margin: 0 auto; /* Memastikan tombol pas di tengah */
-        background: #007bff; 
-        color: #fff; 
-        border: none; 
-        padding: 18px; 
-        border-radius: 16px; 
-        width: 100%; 
-        font-weight: 700; 
-        cursor: pointer;
-    }
-    
+    .input-text { display: block; margin: 0 auto 15px auto; width: 100%; padding: 18px; border: 1px solid #e2e8f0; border-radius: 16px; font-size: 16px; outline: none; box-sizing: border-box; text-align: center; }
+    .btn-submit-q { display: block; margin: 0 auto; background: #007bff; color: #fff; border: none; padding: 18px; border-radius: 16px; width: 100%; font-weight: 700; cursor: pointer; }
     #q-feedback { margin-top: 20px; display: none; padding: 18px; border-radius: 16px; font-size: 15px; font-weight: 600; }
     .alert-win { background: #dcfce7; color: #166534; }
     .alert-loss { background: #fee2e2; color: #991b1b; }
@@ -231,11 +132,12 @@ const title = "BBC Ultra Quiz - English Expressions";
         { type: "mcq", q: "Bagaimana reaksi yang paling sopan ketika pelayan mengantarkan menu yang tidak sesuai pesananmu? ", opts: ["Excuse me, I didn't order for this", "I'm stuffed", "It's tasteless"], a: "Excuse me, I didn't order for this" },
         { type: "mcq", q: "Apa yang akan kamu katakan jika kamu ingin memberi kembalian ketika membayar?", opts: ["Take away, please", "Keep the change!", "It's on me"], a: "Keep the change!" },
         { type: "mcq", q: "Kamu pengen nyobain pizza temen yang keliatannya enak banget.<br><br><i>Gimana cara bilangnya?<i>", opts: ["Would you like to have some more?", "Can I get some more? ", "May I have some? "], a: "May I have some? / Can I have some?" }, 
-        { type: "fill", q: "<b>Waiter:</b> 'Are you ready to order, Sir?'<br><b>You:</b> 'Yes. (____) the grilled chicken and a lemon tea.'", a: "Can I have / Can I order / I'd like to have / I want to have / I want to order / I'd like to order"},
-        { type: "fill", q: "<b>Friend:</b> 'How is your soup? Is it good?'<br><b>You:</b> 'Actually, no. Because it's (____) and it feels like no salt at all.'", a: "tasteless"},
-        { type: "fill", q: "<b>Waiter:</b> 'Would you like to order any dessert? Our chocolate cake is the best!'<br><b>You:</b> 'No thanks. (____) so, I can't eat another bite.'", a: "I'm stuffed"},
-        { type: "fill", q: "<b>Waiter:</b> 'Dine in?'<br><b>You:</b> 'No, just (____) please.'", a: "to go"},
-        { type: "fill", q: "<b>You:</b> 'Soup is too spicy. (____) to make it milder?'", a: "may I have some water / can I get some water / may I get some water"},
+        { type: "fill", q: "<b>Waiter:</b> 'Are you ready to order, Sir?'<br><b>You:</b> 'Yes. (____) the grilled chicken and a lemon tea.'</br></br><i>(Petunjuk: Kamu ingin memesan sesuatu)</i>", a: "Can I have / Can I order / I'd like to have / I want to have / I want to order / I'd like to order"},
+        { type: "fill", q: "<b>Friend:</b> 'How is your soup? Is it good?'<br><b>You:</b> 'Actually, no. Because it's (____) and it feels like no salt at all.'</br></br><i>(Petunjuk: Kamu ingin memesan sesuatu)</i>", a: "tasteless"},
+        { type: "fill", q: "<b>Waiter:</b> 'Would you like to order any dessert? Our chocolate cake is the best!'<br><b>You:</b> 'No thanks. (____) so, I can't eat another bite.'</br></br><i>(Petunjuk: Kamu sudah kenyang banget/begah)</i>", a: "I'm stuffed"},
+        { type: "fill", q: "<b>You:</b> 'Excuse me, (__)?'<br><b>Waiter:</b> 'It's just beside the cashier, Sir.'</br></br><i>(Petunjuk: Kamu bertanya dimana tempat cuci tangannya)</i>", a: "where can I wash my hands? / where is the restroom?"},
+        { type: "fill", q: "<b>Waiter:</b> 'Would you like to dine in?'<br><b>You:</b> 'No, just (____) please.'</br></br><i>(Petunjuk: Bahasa Inggrisnya bawa pulang versi Amerika)</i>", a: "to go"},
+        { type: "fill", q: "<b>You:</b> 'Soup is too spicy. (____) to make it milder?'</br></br><i>(Petunjuk: Kamu minta air)</i>", a: "may I have some water / can I get some water / may I get some water"},
         { type: "listening", q: "<b>Dengarkan!</b><br>Apa yang dimaksud oleh Person B?", audio: "audio/Audio Quiz_Atherestaurant_01.MP3", opts: ["He wants Person A to pay", "He is going to pay for the meal", "He wants to split the bill"], a: "He is going to pay for the meal" },
         { type: "listening", q: "<b>Dengarkan!</b><br><i>Apa pendapat Person B tentang chicken-nya?", audio: "audio/Audio Quiz_Atherestaurant_02.MP3", opts: ["It's tasteless", "It's sour", "It's delicious"], a: "It's delicious" },
     ];
@@ -279,8 +181,8 @@ const title = "BBC Ultra Quiz - English Expressions";
     }
 
     function showTimeOut() {
-        document.getElementById('q-body-area').style.display = 'none';
         document.querySelector('.q-header').style.display = 'none';
+        document.getElementById('q-body-area').style.display = 'none';
         document.getElementById('quiz-timer-container').style.display = 'none';
         document.getElementById('q-timeout').style.display = 'block';
         document.getElementById('snd-wrong').play().catch(() => {});
@@ -289,8 +191,10 @@ const title = "BBC Ultra Quiz - English Expressions";
     function showQuestion() {
         const q = questions[current];
         const contentArea = document.getElementById('q-content');
+        document.getElementById('q-feedback').style.display = 'none';
         document.getElementById('q-status').innerText = `Question ${current + 1} of ${questions.length}`;
         document.getElementById('q-progress-bar').style.width = ((current + 1) / questions.length * 100) + "%";
+        
         let html = `<div class="q-text">${q.q}</div>`;
         if (q.type === "listening") {
             html = `<div style="margin-bottom:20px;"><audio controls autoplay><source src="${q.audio}"></audio></div>` + html;
@@ -298,7 +202,6 @@ const title = "BBC Ultra Quiz - English Expressions";
         if (q.type === "mcq" || q.type === "listening") {
             q.opts.forEach(o => { html += `<button class="btn-opt" onclick="verify('${o.replace(/'/g, "\\'")}', event)">${o}</button>`; });
         } else {
-            // WRAPPER TAMBAHAN UNTUK MEMASTIKAN CENTER PADA MOBILE
             html += `<div style="text-align: center; width: 100%;">
                         <input type="text" id="ans-input" class="input-text" placeholder="Type answer..." autofocus>
                         <button class="btn-submit-q" id="submit-btn">Submit</button>
@@ -326,7 +229,8 @@ const title = "BBC Ultra Quiz - English Expressions";
 
         if (isCorrect) {
             score++;
-            feedbackArea.innerHTML = "✅ Correct!"; feedbackArea.className = "alert-win";
+            feedbackArea.innerHTML = "✅ Correct!"; 
+            feedbackArea.className = "alert-win";
             document.getElementById('snd-correct').play().catch(() => {});
         } else {
             feedbackArea.innerHTML = `❌ Wrong. Answer: <strong>${q.a.split('/')[0]}</strong>`;
@@ -336,21 +240,45 @@ const title = "BBC Ultra Quiz - English Expressions";
 
         setTimeout(() => {
             current++;
-            if (current < questions.length) showQuestion(); else showResult();
-        }, 1800);
+            if (current < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }, 1400);
     };
 
     function showResult() {
         clearInterval(timerId);
+        // MATIKAN ELEMEN INTERFACE LAIN
         document.getElementById('quiz-timer-container').style.display = 'none';
-        document.getElementById('q-main-content').style.display = 'none';
-        document.getElementById('q-result').style.display = 'block';
+        document.querySelector('.q-header').style.display = 'none';
+        document.getElementById('q-body-area').style.display = 'none';
+        
+        // TAMPILKAN HASIL
+        const resArea = document.getElementById('q-result');
+        resArea.style.display = 'block';
         document.getElementById('score-num').innerText = score;
+
+        let feedbackMsg = "";
         if (score === questions.length) {
+            feedbackMsg = "PERFECT! You are a master of English Expressions! 🌟";
             document.getElementById('snd-perfect').play().catch(() => {});
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            confetti({
+                particleCount: 200,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: ['#007bff', '#28a745', '#ffc107']
+            });
+        } else if (score >= 12) {
+            feedbackMsg = "Excellent! You have a great understanding! 🔥";
+        } else if (score >= 8) {
+            feedbackMsg = "Good job! Keep practicing to be better! 👍";
+        } else {
+            feedbackMsg = "Don't give up! Review the material and try again. 💪";
         }
-        document.getElementById('feedback-summary').innerText = score >= 12 ? "Excellent!" : "Keep practicing!";
+
+        document.getElementById('feedback-summary').innerText = feedbackMsg;
     }
 
     initQuiz();
