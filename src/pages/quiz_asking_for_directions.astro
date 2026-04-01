@@ -1,0 +1,288 @@
+---
+// Bagian Frontmatter Astro
+const title = "BBC Ultra Quiz - English Expressions";
+---
+
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" is:inline></script>
+</head>
+<body>
+
+<div id="bbc-quiz-ultra">
+    <div class="quiz-banner">
+        <img 
+            src="/Images/Banner-kuis-web.webp" 
+            alt="English Learning Banner"
+            loading="lazy"
+            width="500"
+            height="180"
+        />
+    </div>
+
+    <div id="quiz-timer-container" style="display: none;">
+        <div class="timer-pill">
+            <span class="timer-icon">⏱️</span>
+            <span id="timer-display">05:00</span>
+        </div>
+    </div>
+
+    <div id="quiz-loader" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px; color: #94a3b8; font-size: 14px; font-weight: 500;">Let's get ready...</p>
+    </div>
+
+    <div id="quiz-welcome" style="display: none; text-align: center;">
+        <h1 style="color: #007bff; font-size: 1.5rem; font-weight: 800; margin-bottom: 5px;">Quiz Time!</h1>
+        <h1 style="color: #007bff; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; margin-top: 0;">Asking for Directions</h1>
+        
+        <div class="instruction-box">
+            <h3 style="font-size: 14px; color: #1e293b; margin-bottom: 12px; font-weight: 700; text-align: left; display: flex; align-items: center; gap: 8px;">
+                <span>📋</span> Instruksi:
+            </h3>
+            <ul style="text-align: left; font-size: 13px; color: #475569; padding-left: 18px; line-height: 1.7; margin: 0; list-style-type: disc;">
+                <li>Total <strong>15 Soal</strong> (Pilihan Ganda, Isian & Listening).</li>
+                <li>Waktu maksimal <strong>5 Menit</strong>.</li>
+                <li>Gunakan Earphone untuk soal Listening.</li>
+                <li>Skor muncul otomatis di akhir kuis.</li>
+            </ul>
+        </div>
+        
+        <button id="start-btn" class="btn-start">Mulai Kuis Sekarang</button>
+    </div>
+
+    <div id="quiz-main-content" style="display: none;">
+        <div class="q-header">
+            <div class="q-progress-bg">
+                <div id="q-progress-bar"></div>
+            </div>
+            <div id="q-status">Memuat soal...</div>
+        </div>
+
+        <div id="q-body-area">
+            <div id="q-content"></div>
+            <div id="q-feedback"></div>
+        </div>
+
+        <div id="q-timeout" style="display: none; text-align: center;">
+            <div style="font-size: 50px; margin-bottom: 10px;">⏰</div>
+            <h2 style="color: #ef4444; margin: 0; font-weight: 800;">Waktu Habis!</h2>
+            <button onclick="window.location.reload()" class="btn-retry" style="background: #ef4444;">Ulangi Kuis</button>
+        </div>
+
+        <div id="q-result" style="display: none; text-align: center;">
+            <h2 id="result-title" style="color: #007bff; margin: 0; font-weight: 800;">Quiz Completed!</h2>
+            <div class="final-score">
+                <span id="score-num">0</span><small style="font-size: 20px; color: #94a3b8;">/15</small>
+            </div>
+            <p id="feedback-summary" style="color: #64748b; font-weight: 600; font-size: 1.1rem; margin-bottom: 20px;"></p>
+            <button onclick="window.location.reload()" class="btn-retry">Ulangi Kuis</button>
+        </div>
+    </div>
+
+    <audio id="snd-correct" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+    <audio id="snd-wrong" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3"></audio>
+    <audio id="snd-perfect" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+</div>
+
+<style is:global>
+    body { background-color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Inter', sans-serif; }
+    #bbc-quiz-ultra { max-width: 500px; width: 100%; margin: 40px 20px; background: #ffffff; border-radius: 24px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; min-height: 420px; box-sizing: border-box; position: relative; overflow: hidden; }
+    #quiz-timer-container { display: none; justify-content: center; margin-bottom: 20px; margin-top: -5px; }
+    .timer-pill { background: #f8fafc; padding: 8px 18px; border-radius: 50px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; color: #1e293b; }
+    .timer-low { color: #ef4444; border-color: #fecaca; background: #fef2f2; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.7; } }
+    .quiz-banner { margin: -40px -40px 30px -40px; width: calc(100% + 80px); height: 180px; overflow: hidden; }
+    .quiz-banner img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 24px 24px 0 0; }
+    @media (max-width: 480px) { #bbc-quiz-ultra { padding: 30px 20px; margin: 20px 10px; border-radius: 20px; } .quiz-banner { height: 130px; margin: -30px -20px 20px -20px; width: calc(100% + 40px); } .quiz-banner img { border-radius: 20px 20px 0 0; } .timer-pill { padding: 6px 14px; font-size: 12px; } .q-text { font-size: 15px; } }
+    .instruction-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 30px; }
+    .btn-start { background: #007bff; color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; }
+    .q-header { margin-bottom: 25px; }
+    .q-progress-bg { width: 100%; height: 6px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
+    #q-progress-bar { height: 100%; background: #007bff; width: 0%; transition: 0.4s ease; }
+    #q-status { font-size: 12px; color: #94a3b8; text-align: right; margin: 8px 0 0 0; font-weight: 700; }
+    .q-text { font-size: 16px; font-weight: 400; color: #1e293b; margin-bottom: 30px; line-height: 1.4; }
+    .btn-opt { display: block; width: 100%; padding: 18px; margin: 12px 0; border: 1px solid #e2e8f0; border-radius: 16px; background: #fff; cursor: pointer; text-align: left; font-size: 16px; color: #475569; }
+    .btn-opt:hover:not(:disabled) { border-color: #cbd5e1; }
+    .btn-opt.is-selected { border-color: #007bff !important; background: #f0f7ff !important; color: #007bff !important; }
+    .btn-opt:disabled { opacity: 0.7; }
+    .input-text { display: block; margin: 0 auto 15px auto; width: 100%; padding: 18px; border: 1px solid #e2e8f0; border-radius: 16px; font-size: 16px; outline: none; box-sizing: border-box; text-align: center; }
+    .btn-submit-q { display: block; margin: 0 auto; background: #007bff; color: #fff; border: none; padding: 18px; border-radius: 16px; width: 100%; font-weight: 700; cursor: pointer; }
+    #q-feedback { margin-top: 20px; display: none; padding: 18px; border-radius: 16px; font-size: 15px; font-weight: 600; }
+    .alert-win { background: #dcfce7; color: #166534; }
+    .alert-loss { background: #fee2e2; color: #991b1b; }
+    .final-score { font-size: 80px; font-weight: 900; color: #007bff; margin: 15px 0; }
+    .btn-retry { background: #1e293b; color: #fff; border: none; padding: 16px 40px; border-radius: 50px; cursor: pointer; font-weight: 700; margin-top: 25px; }
+    .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
+<script is:inline>
+(function() {
+    const questions = [
+        { type: "mcq", q: "Apa yang akan kamu katakan kepada orang lokal ketika tersesat di jalan?", opts: ["Excuse me, I'm lost", "You can't miss it", "Pull over, please"], a: "Excuse me, I'm lost" },
+        { type: "mcq", q: "Apa bahasa Inggrisnya 'Apakah jaraknya dekat dan bisa jalan kaki saja untuk kesana?.'", opts: ["Is it on the corner? ", "Is it within walking distance? ", "Which way should I be heading? "], a: "Is it within walking distance? " },
+        { type: "mcq", q: "Apa bahasa Inggrisnya 'Tolong menepi dulu' ketika naik kendaraan.", opts: ["Turn left, please", "Take the next left", "Pull over, please!"], a: "Pull over, please!" },
+        { type: "mcq", q: "Seseorang memberi tahu kamu jalan, dia bilang 'Gedungnya ada di seberang rumah sakit.'<br><br><i>Apa bahasa Inggrisnya 'di seberang Rumah sakit'?<i>", opts: ["Opposite the hospital", "Behind the hospital", "In front of the hospital"], a: "Opposite the hospital" },
+        { type: "mcq", q: "Apa bahasa Inggrisnya 'Jalan buntu?'", opts: ["Intersection", "Roundabout", "Dead end"], a: "Dead end" },
+        { type: "mcq", q: "Kamu sudah jalan jauh tapi ragu apakah ini jalan yang benar menuju Monas?<br><br><i>Bagaimana cara bertanya untuk memastikan apakah jalannya sudah sesuai?<i>", opts: ["Am I on the right way to Monas?", "Any shortcuts to get there? ", "How do I get there? "], a: "Am I on the right way to Monas?" },
+        { type: "mcq", q: "Seorang owner kafe memberi tahu kamu bahwa kafenya sangat mudah ditemukan dan nggak mungkin terlewat karena papan penanda logonya sangat besar.<br><br><i>Apa 'Expressions' yang tepat digunakan olehnya?<i>", opts: ["You can't miss it", "It's a few blocks away", "You need to pull a U-turn"], a: "You can't miss it" },
+        { type: "fill", q: "<b>Tourist:</b> 'Excuse me, (__)? I really need to use one.'</br><b>Local:Yes, there is one inside that gas station.'</b></br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'Dimanakah toiletnya?')</i>", a: "Where's the toilet / Where is the toilet / where's the toilet / where is the toilet" },
+        { type: "fill", q: "<b>Driver:</b> 'Should I go straight?'</br><b>Passenger:</b> 'No, (__). The house is the second one on the left side.'</b></br></br><i>(Petunjuk: Kamu minta ambil belokan kiri berikutnya)</i>", a: "take the next left / Take the next left" },
+        { type: "fill", q: "<b>You:</b> 'Where is the bakery?.'</br><b>Friend:</b> '(__) the bank, and you will see a big pink building on your right.'</b></br></br><i>(Petunjuk: Kamu minta dia lewat gedung bank itu)<i>", a: "Go past / go past" },
+        { type: "fill", q: "<b>Local:</b> 'The pharmacy is very close. (__) at the end of this road, right where two streets meet.'</br></br><i>(Petunjuk: Lokasinya ada di pojokan jalan)</i>", a: "It's on the corner / it's on the corner / It is on the corner / it is on the corner" },
+        { type: "fill", q: "<b>Tourist:</b> 'Is the museum far?.'</br><b>Local:</b>Not really. (__). So, you don't have to take the bus.'</b></br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'Butuh sekitar 10 menit jalan')</i>", a: "It's about 10 minutes walk / It is about 10 minutes walk / it's about 10 minutes walk / it is about 10 minutes on foot / It's about 10 minutes on foot" },
+        { type: "fill", q: "<b>You:</b> 'Oh no, we missed the entrance!'</br><b>Friend:Don't worry. You just need to(__) at the next intersection and go back</b></br></br><i>(Petunjuk: Apa bahasa Inggrisnya putar balik?)</i>", a: "Pull a U-turn / pull a u-turn / Pull a u-turn / pull a U-Turn" },
+        { type: "listening", q: "<b>Dengarkan!</b><br>Kemana si 'Stranger' harus belok setelah lurus terus melewati dua blok?", audio: "audio/Audio Quiz_Directions_01.MP3", opts: ["Turn left", "Turn right", "Pull a U-turn" ], a: "Turn left" },
+        { type: "listening", q: "<b>Dengarkan!</b><br><i>Dimanakah letak lokasi restoran Italia yang dimaksud?", audio: "audio/Audio Quiz_Directions_02.MP3", opts: ["Behind the Indonesian restaurant ", "Beside Indonesian restaurant", "Opposite Indonesian restaurant"], a: "Beside Indonesian restaurant" },
+    ];
+
+    function shuffleQuestions(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    shuffleQuestions(questions);
+
+    let current = 0, score = 0, timeLeft = 300, timerId = null;
+
+    function initQuiz() {
+        setTimeout(() => {
+            document.getElementById('quiz-loader').style.display = 'none';
+            document.getElementById('quiz-welcome').style.display = 'block';
+        }, 1200);
+    }
+
+    document.getElementById('start-btn').onclick = function() {
+        document.getElementById('quiz-welcome').style.display = 'none';
+        document.getElementById('quiz-main-content').style.display = 'block';
+        document.getElementById('quiz-timer-container').style.display = 'flex';
+        startTimer();
+        showQuestion();
+    };
+
+    function startTimer() {
+        const display = document.getElementById('timer-display');
+        const pill = document.querySelector('.timer-pill');
+        timerId = setInterval(() => {
+            timeLeft--;
+            let mins = Math.floor(timeLeft / 60), secs = timeLeft % 60;
+            display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (timeLeft <= 30) pill.classList.add('timer-low');
+            if (timeLeft <= 0) { clearInterval(timerId); showTimeOut(); }
+        }, 1000);
+    }
+
+    function showTimeOut() {
+        document.querySelector('.q-header').style.display = 'none';
+        document.getElementById('q-body-area').style.display = 'none';
+        document.getElementById('quiz-timer-container').style.display = 'none';
+        document.getElementById('q-timeout').style.display = 'block';
+        document.getElementById('snd-wrong').play().catch(() => {});
+    }
+
+    function showQuestion() {
+        const q = questions[current];
+        const contentArea = document.getElementById('q-content');
+        document.getElementById('q-feedback').style.display = 'none';
+        document.getElementById('q-status').innerText = `Question ${current + 1} of ${questions.length}`;
+        document.getElementById('q-progress-bar').style.width = ((current + 1) / questions.length * 100) + "%";
+        
+        let html = `<div class="q-text">${q.q}</div>`;
+        if (q.type === "listening") {
+            html = `<div style="margin-bottom:20px;"><audio controls autoplay><source src="${q.audio}"></audio></div>` + html;
+        }
+        if (q.type === "mcq" || q.type === "listening") {
+            q.opts.forEach(o => { html += `<button class="btn-opt" onclick="verify('${o.replace(/'/g, "\\'")}', event)">${o}</button>`; });
+        } else {
+            html += `<div style="text-align: center; width: 100%;">
+                        <input type="text" id="ans-input" class="input-text" placeholder="Type answer..." autofocus>
+                        <button class="btn-submit-q" id="submit-btn">Submit</button>
+                     </div>`;
+        }
+        contentArea.innerHTML = html;
+        const input = document.getElementById('ans-input');
+        if (input) {
+            input.addEventListener("keypress", (e) => { if (e.key === "Enter") verify(input.value); });
+            document.getElementById('submit-btn').onclick = () => verify(input.value);
+        }
+    }
+
+    window.verify = function(userAns, e) {
+        if (!userAns || document.querySelectorAll('.btn-opt:disabled').length > 0) return;
+        const q = questions[current], feedbackArea = document.getElementById('q-feedback');
+        if (e && e.currentTarget && e.currentTarget.classList.contains('btn-opt')) e.currentTarget.classList.add('is-selected');
+
+        const normalize = (t) => t.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ").trim();
+        const cleanUserAns = normalize(userAns);
+        const isCorrect = q.a.split('/').map(ans => normalize(ans)).includes(cleanUserAns);
+
+        document.querySelectorAll('.btn-opt, .btn-submit-q').forEach(b => b.disabled = true);
+        feedbackArea.style.display = 'block';
+
+        if (isCorrect) {
+            score++;
+            feedbackArea.innerHTML = "✅ Correct!"; 
+            feedbackArea.className = "alert-win";
+            document.getElementById('snd-correct').play().catch(() => {});
+        } else {
+            feedbackArea.innerHTML = `❌ Wrong. Answer: <strong>${q.a.split('/')[0]}</strong>`;
+            feedbackArea.className = "alert-loss";
+            document.getElementById('snd-wrong').play().catch(() => {});
+        }
+
+        setTimeout(() => {
+            current++;
+            if (current < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }, 1400);
+    };
+
+    function showResult() {
+        clearInterval(timerId);
+        // MATIKAN ELEMEN INTERFACE LAIN
+        document.getElementById('quiz-timer-container').style.display = 'none';
+        document.querySelector('.q-header').style.display = 'none';
+        document.getElementById('q-body-area').style.display = 'none';
+        
+        // TAMPILKAN HASIL
+        const resArea = document.getElementById('q-result');
+        resArea.style.display = 'block';
+        document.getElementById('score-num').innerText = score;
+
+        let feedbackMsg = "";
+        if (score === questions.length) {
+            feedbackMsg = "PERFECT! Congrats, you did it! 🌟";
+            document.getElementById('snd-perfect').play().catch(() => {});
+            confetti({
+                particleCount: 200,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: ['#007bff', '#28a745', '#ffc107']
+            });
+        } else if (score >= 12) {
+            feedbackMsg = "Excellent! You did a good job! 🔥";
+        } else if (score >= 8) {
+            feedbackMsg = "Not bad! Keep practicing a lot! 👍";
+        } else {
+            feedbackMsg = "Don't give up! Let's give another shot. 💪";
+        }
+
+        document.getElementById('feedback-summary').innerText = feedbackMsg;
+    }
+
+    initQuiz();
+})();
+</script>
+</body>
+</html>
