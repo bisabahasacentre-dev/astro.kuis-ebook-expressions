@@ -262,7 +262,7 @@ const title = "BBC Ultra Quiz - English Expressions";
 
         let feedbackMsg = "";
         if (score === questions.length) {
-            feedbackMsg = "PERFECT! You are a master of English Expressions! 🌟";
+            feedbackMsg = "PERFECT! Congrats, you did it! 🌟";
             document.getElementById('snd-perfect').play().catch(() => {});
             confetti({
                 particleCount: 200,
@@ -271,11 +271,11 @@ const title = "BBC Ultra Quiz - English Expressions";
                 colors: ['#007bff', '#28a745', '#ffc107']
             });
         } else if (score >= 12) {
-            feedbackMsg = "Excellent! You have a great understanding! 🔥";
+            feedbackMsg = "Excellent! You did a good job! 🔥";
         } else if (score >= 8) {
-            feedbackMsg = "Good job! Keep practicing to be better! 👍";
+            feedbackMsg = "Not bad! Keep practicing a lot! 👍";
         } else {
-            feedbackMsg = "Don't give up! Review the material and try again. 💪";
+            feedbackMsg = "Don't give up! Let's give another shot. 💪";
         }
 
         document.getElementById('feedback-summary').innerText = feedbackMsg;
