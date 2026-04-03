@@ -39,7 +39,7 @@ const title = "BBC Ultra Quiz - English Expressions";
 
     <div id="quiz-welcome" style="display: none; text-align: center;">
         <h1 style="color: #007bff; font-size: 1.5rem; font-weight: 800; margin-bottom: 5px;">Quiz Time!</h1>
-        <h1 style="color: #007bff; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; margin-top: 0;">Health and Feeling Unwell</h1>
+        <h1 style="color: #007bff; font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; margin-top: 0;">The Weather</h1>
         
         <div class="instruction-box">
             <h3 style="font-size: 14px; color: #1e293b; margin-bottom: 12px; font-weight: 700; text-align: left; display: flex; align-items: center; gap: 8px;">
@@ -125,21 +125,21 @@ const title = "BBC Ultra Quiz - English Expressions";
 <script is:inline>
 (function() {
     const questions = [
-        { type: "mcq", q: "Kamu merasa enggak enak badan, tapi kamu nggak tahu pasti sakit apa.<br><br><i>Apa ungkapan yang sesuai untuk 'Gak enak badan' dalam bahasa Inggris?<i>", opts: ["I'm back on my feet", "I'm feeling under the weather", "I feel not delicious body"], a: "I'm feeling under the weather" },
-        { type: "mcq", q: "Punggungmu terasa pegal atau encok setelah mengangkat sesuatu yang berat.<br><br><i>Apa 'Expressions' yang tepat?<i>", opts: ["My back is killing me", "My leg is numb", "I have a headache"], a: "My back is killing me" },
-        { type: "mcq", q: "Hidungmu rasanya tersumbat sampai susah napas karena flu berat.<br><br><i>Apa 'Expressions' yang tepat?<i>", opts: ["My nose is runny", "I'm stuffed up", "I have a cough"], a: "I'm stuffed up" },
-        { type: "mcq", q: "Apa 'Expressions' yang tepat untuk mendoakan seseorang supaya dia lekas sembuh?", opts: ["Are you okay?", "Take some rest", "Speedy recovery"], a: "Speedy recovery" },
-        { type: "mcq", q: "Apa bahasa Inggrisnya 'aku ngos-ngosan' atau 'aku kehabisan nafas' karena kecapean?", opts: ["I'm feeling run-down", "I'm out of breath", "I'm feeling a bit off"], a: "I'm out of breath" },
-        { type: "mcq", q: "Kamu merasa pusing banget dan mata terasa berkunang-kunang seperti mau pingsan.<br><br><i>Apa 'Expressions' yang tepat?<i>", opts: ["I have stomachache", "My throat is sore", "I'm feeling faint"], a: "I'm feeling faint" },
-        { type: "mcq", q: "Apa bahasa Inggrisnya 'Aku alergi udang'?", opts: ["I'm allergic to shrimp", "I coming down with shrimp", "I'm sensitive to seafood"], a: "I'm allergic to shrimp" },
-        { type: "fill", q: "<b>You:</b> 'I think, I'm (...) because my head is boiling and I've been sneezing since this morning.'</br></br><i>(Petunjuk: Kamu merasa seperti mau sakit atau merasakan gejala awal)</i>", a: "coming down with something / Coming down with something" },
-        { type: "fill", q: "<b>You:</b> 'I sat on the floor for too long, and now (...). Oh my god! I can't feel my toes!'</br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'kakiku kesemutan')</i>", a: "My leg is numb / my leg is numb / My leg is numb / my leg is numb" },
-        { type: "fill", q: "<b>You:</b> 'I shouted too much at the concert last night. Today, (...) and I can't speak clearly.'</br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'tenggoranku sakit')</i>", a: "I sore my throat / i sore my throat /My throat is sore / my throat is sore" },
-        { type: "fill", q: "<b>You:</b> 'It's very hot outside. Make sure to drink a lot of water and (...).'</br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'Tetap jaga cairan tubuh')</i>", a: "Stay hydrated / stay hydrated" },
-        { type: "fill", q: "<b>You:</b> 'I've been working for 15 hours non-stop and now I'm feeling (...).'</br></br><i>(Petunjuk: Bahasa Inggrisnya 'Kecapean parah')</i>", a: "run-down / Run-down" },
-        { type: "fill", q: "<b>You:</b> 'Thank you for the soup. I drank it and slept all day. Now, I feel (...).',</br></br><i>(Petunjuk: Bahasa Inggrisnya 'enakan' atau 'mendingan')</i>", a: "much better / Much better" },
-        { type: "listening", q: "<b>Dengarkan!</b><br>Apa yang harus dilakukan oleh 'Person B'?", audio: "audio/Audio Quiz_Healthandunwell_01.MP3", opts: ["She needs to eat some food", "She needs to sleep for a while", "She needs to drink water" ], a: "She needs to sleep for a while" },
-        { type: "listening", q: "<b>Dengarkan!</b><br><i>Kenapa 'Person B' menolak makanan yang ditawarkan 'Person A?'</i>", audio: "audio/Audio Quiz_Healthandunwell_02.MP3", opts: ["Because she's on diet", "Because she's not hungry", "Because her stomach hurts and she fell nauseous"], a: "Because her stomach hurts and she fell nauseous" },
+        { type: "mcq", q: "Apa bahasa Inggrisnya 'Aku basah kuyup'", opts: ["The sky is clear", "I'm soaking wet", "I'm a bit dry"], a: "I'm soaking wet" },
+        { type: "mcq", q: "Apa bahasa Inggrisnya 'Aku lagi keringetan banget sampai basah banget badannya.'", opts: ["I'm catching some sun", "It's drizzling", "I'm sweating bucket"], a: "I'm sweating bucket" },
+        { type: "mcq", q: "Kamu lagi jalan-jalan ke taman, tapi matahari di luar terik banget. Akhirnya kamu mengajak teman-temanmu untuk berteduh di bawah pohon.<br><br><i>Bagaimana cara bilangnya?</i>", opts: ["It's scorching outside. Let's find some shade", "It's overcast. Let's find some shade", "It's freezing. Let's find some shade"], a: "It's scorching outside. Let's find some shade" },
+        { type: "mcq", q: "Kamu merasa angin berhembus makin kuat dan kencang sampai debu-debu beterbangan.<br><br><i>Apa 'Expressions' yang tepat untuk situasi tersebut?</i>", opts: ["The weather is acting up", "The wind is picking up", "I love the breeze"], a: "The wind is picking up" },
+        { type: "mcq", q: "Apa bahasa Inggrisnya 'Cuacanya dingin banget'", opts: ["It's boiling right now", "It's freezing", "It's clearing up"], a: "It's freezing" },
+        { type: "mcq", q: "Apa bahasa Inggrisnya 'Cuacanya sangat tidak menentu'", opts: ["The weather is acting up", "What a wonderful sunset", "It's pitch black?"], a: "The weather is acting up" },
+        { type: "mcq", q: "Apa bahasa Inggrisnya 'Hujannya sudah reda atau berhenti.'", opts: ["It's pouring outside", "The rain has stopped", "It's a gloomy day"], a: "The rain has stopped" },
+        { type: "fill", q: "Don't forget to (...)! The clouds are very dark, you might get wet on your way home.'</br></br><i>(Petunjuk: Bahasa Inggrisnya 'Bawa jas hujanmu')</i>", a: "Bring your raincoat / bring your raincoat" },
+        { type: "fill", q: "I love the morning vibes in the village. There are no cars and (...)'</br></br><i>(Petunjuk: Bahasa Inggrisnya 'Udaranya sangat segar')</i>", a: "The air is so fresh / the air is so fresh" },
+        { type: "fill", q: "The sky is very dark and there are no stars at all. I think it will rain soon because (...) .'</br></br><i>(Petunjuk: Bahasa Inggrisnya 'Cuacanya sedang gelap gulita seperti mau hujan deras')</i>", a: "It's pitch black outside / it's pitch black outside" },
+        { type: "fill", q: "It's not a heavy rain, it's just (...). You don't really need an umbrella for now.'</br></br><i>(Petunjuk: Apa bahasa Inggrisnya 'hujan gerimis')</i>", a: "Drizzling / drizzling / Drizzle / drizzle" },
+        { type: "fill", q: "I don't like this room. There are no windows and (...). I feel sticky and uncomfortable.</br></br><i>(Petunjuk: Bahasa Inggrisnya 'Lembab banget')</i>", a: "It's so humid / it's so humid / It is so humid / it is so humid" },
+        { type: "fill", q: "Look at the horizon! The colors are orange and purple. Wow, (...)!'</br></br><i>(Petunjuk: Bahasa Inggrisnya 'Betapa indahnya matahari terbenam')</i>", a: "What a wonderful sunset / what a wonderful sunset/ What a beautiful sunset / what a beautiful sunset" },
+        { type: "listening", q: "<b>Dengarkan!</b><br>Bagaimanakah kondisi langit saat ini seperti yang dibicarakan oleh kedua orang tersebut?", audio: "audio/Audio Quiz_Weather_01.MP3", opts: ["It's clearing up and becoming bright", "It's overcast (dark clouds)", "The sun is shining brightly" ], a: "It's overcast (dark clouds" },
+        { type: "listening", q: "<b>Dengarkan!</b><br><i>Kenapa mereka mau beli es krim?'</i>", audio: "audio/Audio Quiz_Weather_02.MP3", opts: ["Because they are freezing", "Because it's drizzling", "Because it's extremely hot and they are sweating"], a: "Because it's extremely hot and they are sweating" },
     ];
 
     function shuffleQuestions(array) {
