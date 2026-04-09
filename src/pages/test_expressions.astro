@@ -80,51 +80,49 @@ const expressions = [
     </div>
 
   <script is:inline>
-  // 1. Buat satu instance player global agar memori efisien
-  const bbcAudioPlayer = new Audio();
+  // Gunakan Global Audio Object
+  let bbcPlayer = new Audio();
+
+  // Fungsi khusus untuk iOS: Membuka 'kunci' audio pada klik pertama
+  function unlockAudio() {
+      bbcPlayer.play().then(() => {
+          bbcPlayer.pause();
+          bbcPlayer.currentTime = 0;
+          document.removeEventListener('click', unlockAudio);
+      }).catch(e => console.log("Waiting for interaction..."));
+  }
+  document.addEventListener('click', unlockAudio);
 
   function playAudio(url) {
     if (!url) return;
 
-    // 2. Pembersihan Path Otomatis
     let cleanPath = url.replace('public/', '/');
     if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
 
-    // 3. Reset Player
-    bbcAudioPlayer.pause();
-    bbcAudioPlayer.src = cleanPath;
-    
-    // 4. Force Load (Sangat penting untuk iOS Safari)
-    bbcAudioPlayer.load();
+    // Untuk iOS: Harus reset src dan panggil load()
+    bbcPlayer.pause();
+    bbcPlayer.src = cleanPath;
+    bbcPlayer.load(); 
 
-    // 5. Eksekusi Play dengan penanganan Promise
-    const playPromise = bbcAudioPlayer.play();
-
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        console.log("Audio playing successfully:", cleanPath);
-      }).catch(error => {
-        console.error("Playback failed:", error);
-        
-        // Jika diblokir karena kebijakan Autoplay mobile
-        if (error.name === 'NotAllowedError') {
-          // Opsional: berikan feedback visual ringan jika benar-benar macet
-          console.log("User must interact with the document first.");
+    // Beri sedikit delay agar iOS sempat memproses loading file
+    setTimeout(() => {
+        const startPlay = bbcPlayer.play();
+        if (startPlay !== undefined) {
+          startPlay.catch(error => {
+            console.error("iOS Playback Error:", error);
+          });
         }
-      });
-    }
+    }, 50);
   }
 
-  // 6. Global Listener (Cara paling stabil menangkap klik di mobile)
+  // Listener untuk menangkap klik tabel
   document.addEventListener('click', (event) => {
     const target = event.target.closest('.eng-clickable');
     if (target) {
       const audioUrl = target.getAttribute('data-audio');
-      if (audioUrl) {
-        playAudio(audioUrl);
-      }
+      if (audioUrl) playAudio(audioUrl);
     }
-  }, false);
+  });
 </script>
 </body>
 </html>
