@@ -79,14 +79,40 @@ const expressions = [
         </footer>
     </div>
 
-    <script is:inline>
-        function playAudio(url) {
-            const audio = new Audio(url);
-            audio.play().catch(err => {
-                console.error("Audio play blocked or file not found:", err);
+   <script is:inline>
+    // Gunakan satu instance audio global untuk efisiensi di mobile
+    window.currentAudio = null;
+
+    function playAudio(url) {
+        // 1. Bersihkan path jika masih ada kata 'public'
+        let cleanUrl = url.replace('public/', '/');
+        if (!cleanUrl.startsWith('/')) cleanUrl = '/' + cleanUrl;
+
+        // 2. Hentikan audio yang sedang berjalan (agar tidak tumpang tindih)
+        if (window.currentAudio) {
+            window.currentAudio.pause();
+            window.currentAudio.currentTime = 0;
+        }
+
+        // 3. Inisialisasi audio baru
+        window.currentAudio = new Audio(cleanUrl);
+        
+        // 4. iOS/Safari memerlukan 'load' secara eksplisit dalam beberapa kasus
+        window.currentAudio.load();
+
+        // 5. Jalankan Play dengan Promise (Standar Mobile)
+        const playPromise = window.currentAudio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log("Audio playing: " + cleanUrl);
+            }).catch(err => {
+                console.error("Audio diblokir browser. Klik teks sekali lagi.", err);
+                // Tip: Browser mobile butuh 1 klik pertama untuk "membuka kunci" izin suara
             });
         }
-    </script>
+    }
+</script>
 </body>
 </html>
 
