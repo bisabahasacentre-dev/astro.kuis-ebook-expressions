@@ -232,42 +232,27 @@ const title = "Interactive Audio Lesson - BBC Pare";
 </style>
 
 <script is:inline>
-    const audio = document.getElementById('mainAudio');
-    const cards = document.querySelectorAll('.dialog-card');
+  function playAudio(url) {
+    let cleanPath = url.replace('public/', '/');
+    if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
 
-    window.setPlaySpeed = function(rate, btn) {
-        if (!audio) return;
-        audio.playbackRate = rate;
-        document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
+    const audio = new Audio(cleanPath);
+    
+    console.log("Mencoba memutar:", cleanPath);
 
-    cards.forEach(card => {
-        card.addEventListener('click', () => {
-            const time = parseFloat(card.getAttribute('data-time'));
-            audio.currentTime = time;
-            audio.play();
-        });
-    });
-
-    let lastActive = -1;
-    audio.addEventListener('timeupdate', () => {
-        const now = audio.currentTime;
-        let currentIdx = -1;
-        cards.forEach((card, i) => {
-            const start = parseFloat(card.getAttribute('data-time'));
-            const next = cards[i + 1];
-            const end = next ? parseFloat(next.getAttribute('data-time')) : Infinity;
-            if (now >= start && now < end) currentIdx = i;
-        });
-        if (currentIdx !== -1 && currentIdx !== lastActive) {
-            cards.forEach(c => c.classList.remove('active'));
-            const activeCard = cards[currentIdx];
-            activeCard.classList.add('active');
-            activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            lastActive = currentIdx;
+    audio.play().then(() => {
+        // Jika berhasil, tidak muncul apa-apa
+    }).catch(err => {
+        // INI AKAN MEMBERITAHU KITA MASALAHNYA
+        if (err.name === 'NotAllowedError') {
+            alert("Error: Browser memblokir suara. Klik layar dulu baru klik teks.");
+        } else if (err.name === 'NotSupportedError' || err.message.includes('supported')) {
+            alert("Error: Format file MP3 tidak didukung oleh HP ini.");
+        } else {
+            alert("Error 404: File tidak ditemukan di " + cleanPath + ". Periksa nama file & folder!");
         }
     });
+  }
 </script>
 
 </body>
