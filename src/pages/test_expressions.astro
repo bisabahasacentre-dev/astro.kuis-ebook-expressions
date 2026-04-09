@@ -2,23 +2,12 @@
 // Data konten tetap sama
 const expressions = [
   { eng: "How do you do?", read: "Hau-du-yu-du?", tr: "Apa kabar? (Pertama kali)", audio: "public/audio/Audio_Quiz_Weatther_01.mp3" },
-  { eng: "How is it going?", read: "Ha-zit-gou-wing?", tr: "Apa kabar?", audio: "public/audio/how-is-it-going.mp3" },
-  { eng: "How are you?", read: "Hau-war-yu?", tr: "Apa kabar?", audio: "/audio/how-are-you.mp3" },
-  { eng: "What are you up to?", read: "Wa-teur-yuwap-tu?", tr: "Lagi sibuk apa sekarang?", audio: "/audio/up-to.mp3" },
-  { eng: "What's going on?", read: "Wots-going-on", tr: "Gimana kabarnya?", audio: "/audio/going-on.mp3" },
-  { eng: "What's up?", read: "Wats-ap?", tr: "Apa kabar?", audio: "/audio/whats-up.mp3" },
-  { eng: "How's life?", read: "Haus-laif?", tr: "Apa kabar?", audio: "/audio/hows-life.mp3" },
-  { eng: "Long time no see!", read: "Long-taim-no-si", tr: "Lama gak ketemu nih!", audio: "/audio/long-time.mp3" },
-  { eng: "It's been ages!", read: "Its-biin-eijeus", tr: "Udah lama gak ketemu!", audio: "/audio/been-ages.mp3" },
-  { eng: "How do you do?", read: "Hau-du-yu-du?", tr: "Apa kabar? (Pertama kali)", audio: "/audio/how-do-you-do.mp3" },
   { eng: "How is it going?", read: "Ha-zit-gou-wing?", tr: "Apa kabar?", audio: "/audio/how-is-it-going.mp3" },
   { eng: "How are you?", read: "Hau-war-yu?", tr: "Apa kabar?", audio: "/audio/how-are-you.mp3" },
   { eng: "What are you up to?", read: "Wa-teur-yuwap-tu?", tr: "Lagi sibuk apa sekarang?", audio: "/audio/up-to.mp3" },
   { eng: "What's going on?", read: "Wots-going-on", tr: "Gimana kabarnya?", audio: "/audio/going-on.mp3" },
   { eng: "What's up?", read: "Wats-ap?", tr: "Apa kabar?", audio: "/audio/whats-up.mp3" },
   { eng: "How's life?", read: "Haus-laif?", tr: "Apa kabar?", audio: "/audio/hows-life.mp3" },
-  { eng: "Long time no see!", read: "Long-taim-no-si", tr: "Lama gak ketemu nih!", audio: "/audio/long-time.mp3" },
-  { eng: "It's been ages!", read: "Its-biin-eijeus", tr: "Udah lama gak ketemu!", audio: "/audio/been-ages.mp3" },
   { eng: "Long time no see!", read: "Long-taim-no-si", tr: "Lama gak ketemu nih!", audio: "/audio/long-time.mp3" },
   { eng: "It's been ages!", read: "Its-biin-eijeus", tr: "Udah lama gak ketemu!", audio: "/audio/been-ages.mp3" },
 ];
@@ -39,7 +28,7 @@ const expressions = [
 
         <section class="title-section">
             <h1>Greetings & Small Talk</h1>
-            <p>Klik pada kolom expressions untuk mendengar cara bacanya</p>
+            <p>Perkenalan & Basa-basi</p>
         </section>
 
         <div class="table-wrapper">
@@ -83,8 +72,8 @@ const expressions = [
 
         <footer class="footer">
             <div class="footer-left">
-                <span>📸 @kampunginggrisbbc</span>
-                <span>🌐 www.kampunginggrisbbc.com</span>
+                <span>📷 kampunginggrisbbc</span>
+                <span>🌐 www.bbc.com</span>
             </div>
             <div class="page-number">03</div>
         </footer>
@@ -144,7 +133,7 @@ const expressions = [
     .expression-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 0px;
+        margin-top: 20px;
         background-color: rgba(255, 255, 255, 0.9);
         table-layout: auto; /* Dinamis mengikuti konten */
     }
@@ -152,58 +141,26 @@ const expressions = [
     /* ... Sisa CSS Anda dioptimalkan di bagian media query di bawah ... */
 
     .page-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    padding: 20px 0;
-    width: 100%;
-}
-
-/* Membagi ruang menjadi 3 bagian yang sama rata */
-.nav-item {
-    flex: 1; 
-}
-
-.nav-item.left {
-    text-align: left;
-}
-
-.nav-item.center {
-    text-align: center;
-}
-
-.nav-item.right {
-    text-align: right;
-}
-
-.nav-link {
-    text-decoration: none;
-    color: #444; /* Sesuaikan dengan warna di gambar Anda */
-    font-weight: 600;
-    font-size: clamp(12px, 3vw, 16px); /* Ukuran dinamis untuk mobile & desktop */
-    transition: color 0.2s ease;
-}
-
-.nav-link:hover {
-    color: var(--primary-blue);
-}
-
-/* Penyesuaian untuk layar sangat kecil */
-@media (max-width: 480px) {
-    .page-navigation {
-        padding: 15px 5px;
+        display: flex;
+        align-items: center;
+        margin-top: auto;
+        padding: 20px 0 10px 0;
+        border-top: 1px solid rgba(0,0,0,0.05);
     }
-    .nav-link {
-        font-size: 11px;
-    }
-}
+
+    .nav-item { flex: 1; font-size: 14px; font-weight: 600; }
+    .nav-item.left { text-align: left; }
+    .nav-item.center { text-align: center; }
+    .nav-item.right { text-align: right; }
+    .nav-link { color: #444; text-decoration: none; transition: all 0.2s ease; display: inline-block; }
+    .chevron { font-size: 18px; vertical-align: middle; }
+    .nav-link:hover { color: var(--primary-blue); transform: translateY(-1px); }
 
     .header { display: flex; justify-content: space-between; font-size: 14px; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 40px; }
     .title-section { text-align: center; margin-bottom: 30px; }
     .title-section h1 { margin: 0; font-size: 32px; font-weight: bold; }
     .expression-table th { background-color: var(--yellow-header); border: 1px solid var(--border-color); padding: 12px; font-size: 14px; }
-    .expression-table td { border: 1px solid var(--border-color); padding: 10px; text-align: center; font-size: 12px; }
+    .expression-table td { border: 1px solid var(--border-color); padding: 10px; text-align: center; font-size: 14px; }
     .eng-clickable { font-weight: 600; cursor: pointer; color: var(--primary-blue); transition: background 0.2s; }
     .eng-clickable:hover { background-color: rgba(0, 38, 119, 0.05); }
     .read { font-style: italic; color: #555; }
@@ -211,52 +168,34 @@ const expressions = [
     .footer {
         background-color: var(--primary-blue);
         color: white;
-        padding: 10px 20px;
+        padding: 15px 30px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-radius: 50px;
-        margin-top: 20px;
-        gap: 15px; /* Memberi jarak antara info medsos dan nomor halaman */
+        margin-top: 10px;
     }
 
-    .footer-left {
-        display: flex;
-        flex-direction: row; /* MEMBUAT SEJAJAR KESAMPING */
-        align-items: center;
-        gap: 15px; /* Jarak antara ikon IG dan ikon Web */
-        flex-wrap: nowrap; /* Mencegah teks turun ke bawah */
-    }
+    .page-number { font-size: 32px; font-weight: bold; }
 
-    .footer-left span {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: clamp(9px, 2vw, 13px); /* Ukuran font dinamis agar tetap muat sejajar */
-        white-space: nowrap;
-    }
-
-    .page-number {
-        font-size: clamp(20px, 4vw, 32px);
-        font-weight: bold;
-        flex-shrink: 0;
-    }
-
-    /* PENYESUAIAN KHUSUS MOBILE */
+    /* MEDIA QUERY UNTUK MOBILE (DINAMIS ANDROID & IOS) */
     @media (max-width: 600px) {
-        .footer {
-            padding: 8px 15px;
-            border-radius: 20px;
-            gap: 10px;
+        .ebook-container { 
+            padding: 30px 20px; /* Padding lebih kecil agar teks luas */
         }
-
-        .footer-left {
-            gap: 8px; /* Jarak antar medsos dipersempit sedikit di mobile */
-            overflow: hidden; /* Menjaga agar tidak merusak layout */
+        .header { font-size: 12px; margin-bottom: 20px; }
+        .title-section h1 { font-size: 24px; }
+        .title-section p { font-size: 16px; }
+        
+        /* Tabel mengecil secara otomatis */
+        .expression-table th, .expression-table td { 
+            padding: 8px 4px; 
+            font-size: 12px; 
         }
-
-        .footer-left span {
-            font-size: 9px; /* Ukuran font dipatok kecil agar pasti sejajar */
-        }
+        
+        .footer { padding: 10px 20px; border-radius: 25px; }
+        .footer-left { display: none; } /* Sembunyikan medsos di HP agar tidak sesak */
+        .page-navigation { font-size: 11px; }
+        .page-number { font-size: 24px; }
     }
 </style>
