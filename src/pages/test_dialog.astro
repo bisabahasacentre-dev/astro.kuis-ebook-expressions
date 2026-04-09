@@ -1,0 +1,178 @@
+---
+// Halaman 06 - Versi Clean & Fix Path
+---
+
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>500 English Expressions - BBC Pare</title>
+</head>
+<body oncontextmenu="return false;">
+    <div class="ebook-container no-select">
+        
+        <header class="header">
+            <span class="bold">500 English Expressions</span>
+            <span class="vol">Vol 1</span>
+        </header>
+
+
+
+        <nav class="page-navigation">
+            <div class="nav-item left">
+                <a href="/test_restaurant" class="nav-link">&laquo; Prev Page</a>
+            </div>
+            <div class="nav-item center">
+                <a href="/daftar-isi" class="nav-link">Daftar Isi</a>
+            </div>
+            <div class="nav-item right">
+                <a href="/test_expressions" class="nav-link">Next Page &raquo;</a>
+            </div>
+        </nav>
+
+        <footer class="footer">
+            <div class="footer-left">
+                <span>📷 @kampunginggrisbbc</span>
+                <span>🌐 www.kampunginggrisbbc.com</span>
+            </div>
+            <div class="page-number">06</div>
+        </footer>
+    </div>
+
+    <script is:inline>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey && [67, 85, 83, 80].includes(e.keyCode)) || e.keyCode === 123) e.preventDefault();
+        });
+    </script>
+</body>
+</html>
+
+<style>
+    :root { --primary-blue: #002677; }
+    .no-select { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+    
+    body { margin: 0; background-color: #f0f0f0; font-family: 'Segoe UI', sans-serif; }
+
+    .ebook-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        background-image: url('/Images/dialog_1.webp');
+        background-size: cover;
+        background-position: center;
+        padding: 40px 30px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
+    .header { 
+        display: flex; justify-content: space-between; 
+        border-bottom: 2px solid #000; padding-bottom: 8px;
+        margin-bottom: 30px; font-weight: none; font-size: 13px;
+    }
+
+    .title-section { text-align: center; margin-bottom: 20px; }
+    .title-section h1 { margin: 0; font-size: 32px; font-weight: bold; color: #000; }
+    .title-section p { margin: 5px 0 0; font-size: 18px; color: #333; }
+
+    .image-content { width: 100%; margin-bottom: 30px; flex-grow: 1; }
+    .dialog-img { width: 100%; height: auto; display: block; pointer-events: none; }
+
+    .page-navigation {
+        display: flex; justify-content: space-between;
+        padding: 20px 0 10px; border-top: 1px solid #eee; margin-top: auto;
+    }
+    .nav-link { color: #444; text-decoration: none; font-weight: bold; font-size: 14px; }
+
+    .footer {
+        background-color: var(--primary-blue);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 50px;
+        margin-top: 10px;
+    }
+
+    .page-number { font-size: 32px; font-weight: bold; }
+
+    /* MEDIA QUERY UNTUK MOBILE (DINAMIS ANDROID & IOS) */
+    @media (max-width: 600px) {
+        .ebook-container { 
+            padding: 30px 20px; /* Padding lebih kecil agar teks luas */
+            background-size: 100% 100%; 
+            background-attachment: scroll;
+        }
+        .header { font-size: 12px; margin-bottom: 20px; }
+        .title-section h1 { font-size: 24px; }
+        .title-section p { font-size: 12px; }
+        
+        /* Tabel mengecil secara otomatis */
+        .expression-table th, .expression-table td { 
+            padding: 8px 4px; 
+            font-size: 12px; 
+        }
+        
+        <style>
+    /* ... Kode lainnya tetap sama ... */
+
+    .footer {
+        background-color: var(--primary-blue);
+        color: white;
+        padding: 4px 20px; 
+        display: flex;
+        justify-content: space-between;
+        /* KUNCI 1: Menyejajarkan grup teks kiri dengan angka kanan */
+        align-items: center; 
+        border-radius: 50px;
+        margin-top: 15px;
+    }
+
+    .footer-left {
+        display: flex;
+        flex-direction: row;
+        /* KUNCI 2: Menyejajarkan teks IG dan Web secara horizontal */
+        align-items: center; 
+        gap: 15px; 
+        flex-wrap: nowrap;
+    }
+
+    .footer-left span {
+        display: flex;
+        /* KUNCI 3: Menyejajarkan ikon kamera/web tepat di tengah teksnya */
+        align-items: center; 
+        gap: 6px; /* Jarak antara ikon dan teks */
+        font-size: clamp(9px, 1.2vw, 12px);
+        white-space: nowrap;
+        line-height: 1; /* Menghilangkan spasi tambahan di atas/bawah teks */
+    }
+
+    .page-number { 
+        font-size: clamp(16px, 3vw, 22px); 
+        font-weight: bold;
+        flex-shrink: 0;
+        /* KUNCI 4: Memastikan angka sejajar dengan teks di kiri */
+        display: flex;
+        align-items: center;
+        line-height: 1;
+    }
+
+    /* Penyesuaian Mobile */
+    @media (max-width: 600px) {
+        .footer { 
+            padding: 3px 15px;
+        }
+        .footer-left {
+            gap: 10px;
+        }
+        .footer-left span {
+            font-size: 9px;
+            gap: 4px;
+        }
+    }
+</style>
