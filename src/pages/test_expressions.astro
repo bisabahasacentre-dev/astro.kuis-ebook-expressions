@@ -1,7 +1,7 @@
 ---
 // Data konten tetap sama
 const expressions = [
-  { eng: "How do you do?", read: "Hau-du-yu-du?", tr: "Apa kabar? (Pertama kali)", audio: "/audio/Audio_Quiz_Weather_01.mp3" },
+  { eng: "How do you do?", read: "Hau-du-yu-du?", tr: "Apa kabar? (Pertama kali)", audio: "/audio/quiz_weather_011.mp3" },
   { eng: "How is it going?", read: "Ha-zit-gou-wing?", tr: "Apa kabar?", audio: "/audio/how-is-it-going.mp3" },
   { eng: "How are you?", read: "Hau-war-yu?", tr: "Apa kabar?", audio: "/audio/how-are-you.mp3" },
   { eng: "What are you up to?", read: "Wa-teur-yuwap-tu?", tr: "Lagi sibuk apa sekarang?", audio: "/audio/up-to.mp3" },
@@ -43,7 +43,7 @@ const expressions = [
                 <tbody>
                     {expressions.map((item) => (
                         <tr>
-                            <td class="eng eng-clickable" onclick={`playAudio('${item.audio}')`}>
+                            <td class="eng eng-clickable" data-audio={item.audio}>
                                 {item.eng}
                             </td>
                             <td class="read">{item.read}</td>
@@ -79,39 +79,52 @@ const expressions = [
         </footer>
     </div>
 
-   <script is:inline>
-    // Gunakan satu instance audio global untuk efisiensi di mobile
-    window.currentAudio = null;
+  <script is:inline>
+  // 1. Buat satu instance player global agar memori efisien
+  const bbcAudioPlayer = new Audio();
 
-    function playAudio(url) {
-        // 1. Bersihkan path jika masih ada kata 'public'
-        let cleanUrl = url.replace('public/', '/');
-        if (!cleanUrl.startsWith('/')) cleanUrl = '/' + cleanUrl;
+  function playAudio(url) {
+    if (!url) return;
 
-        // 2. Hentikan audio yang sedang berjalan (agar tidak tumpang tindih)
-        if (window.currentAudio) {
-            window.currentAudio.pause();
-            window.currentAudio.currentTime = 0;
-        }
+    // 2. Pembersihan Path Otomatis
+    let cleanPath = url.replace('public/', '/');
+    if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
 
-        // 3. Inisialisasi audio baru
-        window.currentAudio = new Audio(cleanUrl);
+    // 3. Reset Player
+    bbcAudioPlayer.pause();
+    bbcAudioPlayer.src = cleanPath;
+    
+    // 4. Force Load (Sangat penting untuk iOS Safari)
+    bbcAudioPlayer.load();
+
+    // 5. Eksekusi Play dengan penanganan Promise
+    const playPromise = bbcAudioPlayer.play();
+
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        console.log("Audio playing successfully:", cleanPath);
+      }).catch(error => {
+        console.error("Playback failed:", error);
         
-        // 4. iOS/Safari memerlukan 'load' secara eksplisit dalam beberapa kasus
-        window.currentAudio.load();
-
-        // 5. Jalankan Play dengan Promise (Standar Mobile)
-        const playPromise = window.currentAudio.play();
-
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log("Audio playing: " + cleanUrl);
-            }).catch(err => {
-                console.error("Audio diblokir browser. Klik teks sekali lagi.", err);
-                // Tip: Browser mobile butuh 1 klik pertama untuk "membuka kunci" izin suara
-            });
+        // Jika diblokir karena kebijakan Autoplay mobile
+        if (error.name === 'NotAllowedError') {
+          // Opsional: berikan feedback visual ringan jika benar-benar macet
+          console.log("User must interact with the document first.");
         }
+      });
     }
+  }
+
+  // 6. Global Listener (Cara paling stabil menangkap klik di mobile)
+  document.addEventListener('click', (event) => {
+    const target = event.target.closest('.eng-clickable');
+    if (target) {
+      const audioUrl = target.getAttribute('data-audio');
+      if (audioUrl) {
+        playAudio(audioUrl);
+      }
+    }
+  }, false);
 </script>
 </body>
 </html>
