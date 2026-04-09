@@ -133,6 +133,16 @@ const expressions = [
       const audioUrl = target.getAttribute('data-audio');
       if (audioUrl) playAudio(audioUrl);
     }
+// Mematikan Klik Kanan
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Mematikan Keyboard Shortcut (Ctrl+C, Ctrl+U, Ctrl+S, F12)
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83) || e.keyCode === 123) {
+        e.preventDefault();
+        return false;
+    }
+});
   });
 </script>
 </body>
@@ -169,6 +179,11 @@ const expressions = [
         display: flex;
         flex-direction: column;
         box-sizing: border-box; /* Menghitung padding ke dalam lebar */
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none;    /* Firefox */
+        -ms-user-select: none;     /* IE10+ */
+        user-select: none;         /* Standard */
+        -webkit-touch-callout: none; /* Mematikan menu pop-up di iOS/Android */
     }
 
     /* Pengaturan Tabel Dinamis */
@@ -235,7 +250,7 @@ const expressions = [
         }
         .header { font-size: 12px; margin-bottom: 20px; }
         .title-section h1 { font-size: 24px; }
-        .title-section p { font-size: 13px; }
+        .title-section p { font-size: 1px; }
         
         /* Tabel mengecil secara otomatis */
         .expression-table th, .expression-table td { 
@@ -245,12 +260,6 @@ const expressions = [
         
         <style>
     /* ... Kode lainnya tetap sama ... */
-
-    <style>
-    /* ... kode lainnya tetap sama ... */
-
-    <style>
-    /* ... kode lainnya tetap sama ... */
 
     .footer {
         background-color: var(--primary-blue);
