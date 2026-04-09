@@ -1,0 +1,201 @@
+---
+// Data konten tetap sama
+const expressions = [
+  { eng: "How do you do?", read: "Hau-du-yu-du?", tr: "Apa kabar? (Pertama kali)", audio: "/audio/how-do-you-do.mp3" },
+  { eng: "How is it going?", read: "Ha-zit-gou-wing?", tr: "Apa kabar?", audio: "/audio/how-is-it-going.mp3" },
+  { eng: "How are you?", read: "Hau-war-yu?", tr: "Apa kabar?", audio: "/audio/how-are-you.mp3" },
+  { eng: "What are you up to?", read: "Wa-teur-yuwap-tu?", tr: "Lagi sibuk apa sekarang?", audio: "/audio/up-to.mp3" },
+  { eng: "What's going on?", read: "Wots-going-on", tr: "Gimana kabarnya?", audio: "/audio/going-on.mp3" },
+  { eng: "What's up?", read: "Wats-ap?", tr: "Apa kabar?", audio: "/audio/whats-up.mp3" },
+  { eng: "How's life?", read: "Haus-laif?", tr: "Apa kabar?", audio: "/audio/hows-life.mp3" },
+  { eng: "Long time no see!", read: "Long-taim-no-si", tr: "Lama gak ketemu nih!", audio: "/audio/long-time.mp3" },
+  { eng: "It's been ages!", read: "Its-biin-eijeus", tr: "Udah lama gak ketemu!", audio: "/audio/been-ages.mp3" },
+];
+---
+
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>500 English Expressions - BBC Pare</title>
+</head>
+<body>
+    <div class="ebook-container">
+        <header class="header">
+            <span class="bold">500 English Expressions</span>
+            <span class="vol">Vol 1</span>
+        </header>
+
+        <section class="title-section">
+            <h1>Greetings & Small Talk</h1>
+            <p>Perkenalan & Basa-basi</p>
+        </section>
+
+        <div class="table-wrapper">
+            <table class="expression-table">
+                <thead>
+                    <tr>
+                        <th>Bahasa Inggris</th>
+                        <th>Cara Baca</th>
+                        <th>Terjemahan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {expressions.map((item) => (
+                        <tr>
+                            <td class="eng eng-clickable" onclick={`playAudio('${item.audio}')`}>
+                                {item.eng}
+                            </td>
+                            <td class="read">{item.read}</td>
+                            <td class="tr">{item.tr}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+
+        <nav class="page-navigation">
+            <div class="nav-item left">
+                <a href="/halaman-02" class="nav-link">
+                    <span class="chevron">&laquo;</span> Prev Page
+                </a>
+            </div>
+            <div class="nav-item center">
+                <a href="/daftar-isi" class="nav-link">Daftar Isi</a>
+            </div>
+            <div class="nav-item right">
+                <a href="/halaman-04" class="nav-link">
+                    Next Page <span class="chevron">&raquo;</span>
+                </a>
+            </div>
+        </nav>
+
+        <footer class="footer">
+            <div class="footer-left">
+                <span>📷 kampunginggrisbbc</span>
+                <span>🌐 www.bbc.com</span>
+            </div>
+            <div class="page-number">03</div>
+        </footer>
+    </div>
+
+    <script is:inline>
+        function playAudio(url) {
+            const audio = new Audio(url);
+            audio.play().catch(err => {
+                console.error("Audio play blocked or file not found:", err);
+            });
+        }
+    </script>
+</body>
+</html>
+
+<style>
+    :root {
+        --primary-blue: #002677;
+        --yellow-header: #ffff00;
+        --border-color: #d1d1d1;
+    }
+
+    body {
+        margin: 0;
+        padding: 0; /* Padding dihilangkan agar container bisa menyentuh pinggir layar mobile */
+        background-color: #f0f0f0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    .ebook-container {
+        width: 100%;
+        max-width: 800px; /* Batas maksimal desktop tetap terjaga */
+        background-color: white;
+        background-image: url('public/images/background_ebook_expressions.webp');
+        background-size: cover;
+        background-position: center;
+        padding: 60px 40px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        position: relative;
+        min-height: 100vh; /* Mengikuti tinggi layar perangkat */
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box; /* Menghitung padding ke dalam lebar */
+    }
+
+    /* Pengaturan Tabel Dinamis */
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto; /* Memungkinkan scroll horizontal jika teks sangat panjang di layar kecil */
+        -webkit-overflow-scrolling: touch; /* Scroll halus di iOS */
+    }
+
+    .expression-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        table-layout: auto; /* Dinamis mengikuti konten */
+    }
+
+    /* ... Sisa CSS Anda dioptimalkan di bagian media query di bawah ... */
+
+    .page-navigation {
+        display: flex;
+        align-items: center;
+        margin-top: auto;
+        padding: 20px 0 10px 0;
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .nav-item { flex: 1; font-size: 14px; font-weight: 600; }
+    .nav-item.left { text-align: left; }
+    .nav-item.center { text-align: center; }
+    .nav-item.right { text-align: right; }
+    .nav-link { color: #444; text-decoration: none; transition: all 0.2s ease; display: inline-block; }
+    .chevron { font-size: 18px; vertical-align: middle; }
+    .nav-link:hover { color: var(--primary-blue); transform: translateY(-1px); }
+
+    .header { display: flex; justify-content: space-between; font-size: 14px; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 40px; }
+    .title-section { text-align: center; margin-bottom: 30px; }
+    .title-section h1 { margin: 0; font-size: 32px; font-weight: bold; }
+    .expression-table th { background-color: var(--yellow-header); border: 1px solid var(--border-color); padding: 12px; font-size: 14px; }
+    .expression-table td { border: 1px solid var(--border-color); padding: 10px; text-align: center; font-size: 14px; }
+    .eng-clickable { font-weight: 600; cursor: pointer; color: var(--primary-blue); transition: background 0.2s; }
+    .eng-clickable:hover { background-color: rgba(0, 38, 119, 0.05); }
+    .read { font-style: italic; color: #555; }
+
+    .footer {
+        background-color: var(--primary-blue);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 50px;
+        margin-top: 10px;
+    }
+
+    .page-number { font-size: 32px; font-weight: bold; }
+
+    /* MEDIA QUERY UNTUK MOBILE (DINAMIS ANDROID & IOS) */
+    @media (max-width: 600px) {
+        .ebook-container { 
+            padding: 30px 20px; /* Padding lebih kecil agar teks luas */
+        }
+        .header { font-size: 12px; margin-bottom: 20px; }
+        .title-section h1 { font-size: 24px; }
+        .title-section p { font-size: 16px; }
+        
+        /* Tabel mengecil secara otomatis */
+        .expression-table th, .expression-table td { 
+            padding: 8px 4px; 
+            font-size: 12px; 
+        }
+        
+        .footer { padding: 10px 20px; border-radius: 25px; }
+        .footer-left { display: none; } /* Sembunyikan medsos di HP agar tidak sesak */
+        .page-navigation { font-size: 11px; }
+        .page-number { font-size: 24px; }
+    }
+</style>
