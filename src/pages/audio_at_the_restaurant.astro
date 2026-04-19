@@ -1,5 +1,4 @@
 ---
-// Bagian Frontmatter Astro
 const title = "Interactive Audio Lesson - BBC Pare";
 ---
 
@@ -170,11 +169,10 @@ const title = "Interactive Audio Lesson - BBC Pare";
         justify-content: center;
     }
 
-    /* FIX BANNER: Pastikan tampilan utuh tanpa crop di pojok (tempat logo BBC) */
     .quiz-banner {
         width: 100%;
         margin-bottom: 25px; 
-        line-height: 0; /* Menghapus whitespace di bawah image */
+        line-height: 0;
         overflow: hidden;
         border-radius: 24px 24px 0 0;
     }
@@ -183,7 +181,7 @@ const title = "Interactive Audio Lesson - BBC Pare";
         width: 100%;
         height: auto;
         display: block;
-        object-fit: contain; /* Memastikan seluruh gambar masuk ke area container */
+        object-fit: contain;
     }
 
     /* Container */
@@ -225,34 +223,48 @@ const title = "Interactive Audio Lesson - BBC Pare";
         .container { min-height: auto; height: 85vh; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
     }
 
-    /* Penyesuaian khusus mobile agar tidak ada cropping sama sekali */
     @media (max-width: 480px) {
         .quiz-banner { border-radius: 20px 20px 0 0; }
     }
 </style>
 
 <script is:inline>
-  function playAudio(url) {
-    let cleanPath = url.replace('public/', '/');
-    if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
+    const audio = document.getElementById('mainAudio');
+    const cards = document.querySelectorAll('.dialog-card');
 
-    const audio = new Audio(cleanPath);
-    
-    console.log("Mencoba memutar:", cleanPath);
+    window.setPlaySpeed = function(rate, btn) {
+        if (!audio) return;
+        audio.playbackRate = rate;
+        document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
 
-    audio.play().then(() => {
-        // Jika berhasil, tidak muncul apa-apa
-    }).catch(err => {
-        // INI AKAN MEMBERITAHU KITA MASALAHNYA
-        if (err.name === 'NotAllowedError') {
-            alert("Error: Browser memblokir suara. Klik layar dulu baru klik teks.");
-        } else if (err.name === 'NotSupportedError' || err.message.includes('supported')) {
-            alert("Error: Format file MP3 tidak didukung oleh HP ini.");
-        } else {
-            alert("Error 404: File tidak ditemukan di " + cleanPath + ". Periksa nama file & folder!");
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const time = parseFloat(card.getAttribute('data-time'));
+            audio.currentTime = time;
+            audio.play();
+        });
+    });
+
+    let lastActive = -1;
+    audio.addEventListener('timeupdate', () => {
+        const now = audio.currentTime;
+        let currentIdx = -1;
+        cards.forEach((card, i) => {
+            const start = parseFloat(card.getAttribute('data-time'));
+            const next = cards[i + 1];
+            const end = next ? parseFloat(next.getAttribute('data-time')) : Infinity;
+            if (now >= start && now < end) currentIdx = i;
+        });
+        if (currentIdx !== -1 && currentIdx !== lastActive) {
+            cards.forEach(c => c.classList.remove('active'));
+            const activeCard = cards[currentIdx];
+            activeCard.classList.add('active');
+            activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            lastActive = currentIdx;
         }
     });
-  }
 </script>
 
 </body>
