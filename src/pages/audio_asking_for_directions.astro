@@ -1,0 +1,266 @@
+---
+const title = "Interactive Audio Lesson - BBC Pare";
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="quiz-banner">
+        <img 
+            src="/Images/Banner-kuis-web.webp" 
+            alt="1000 Common English Expressions"
+            loading="lazy"
+        />
+    </div>
+
+    <div class="header-player">
+        <h2>Unit 5 : Asking for Directions</h2>
+        <p style="font-size: 0.75rem; color: #64748b; margin-top: -10px; margin-bottom: 15px;">
+            Putar audio dan baca text dialognya lalu ikuti cara pelafalannya!
+        </p>
+        <audio id="mainAudio" controls preload="metadata">
+            <source src="audio/audio_asking_for_directions.mp3" type="audio/mpeg">
+        </audio>
+
+        <div class="speed-wrapper">
+            <button class="btn-speed" onclick="setPlaySpeed(0.5, this)">0.5x</button>
+            <button class="btn-speed" onclick="setPlaySpeed(0.8, this)">0.8x</button>
+            <button class="btn-speed active" onclick="setPlaySpeed(1.0, this)">Normal</button>
+            <button class="btn-speed" onclick="setPlaySpeed(1.2, this)">1.2x</button>
+        </div>
+    </div>
+
+    <div class="transcript-container" id="transcriptBody">
+        <div class="dialog-card" data-time="2">
+            <span class="speaker">Rian</span>
+            <span class="message">Excuse me, I think I'm lost. </span>
+        </div>
+
+        <div class="dialog-card" data-time="5">
+            <span class="speaker">Ben</span>
+            <span class="message">No worries! Where are you trying to go?</span>
+        </div>
+
+        <div class="dialog-card" data-time="9">
+            <span class="speaker">Rian</span>
+            <span class="message">I'm looking for this hotel, 'Garuda inn'.</span>
+        </div>
+        
+        <div class="dialog-card" data-time="14">
+            <span class="speaker">Ben</span>
+            <span class="message">Oh, it's near here! You're actually very close.</span>
+        </div>
+
+        <div class="dialog-card" data-time="19">
+            <span class="speaker">Rian</span>
+            <span class="message">That's a relief. Is it far from here?</span>
+        </div>
+
+        <div class="dialog-card" data-time="22">
+            <span class="speaker">Ben</span>
+            <span class="message">Just a three-minute walk.</span>
+        </div>
+
+        <div class="dialog-card" data-time="25">
+            <span class="speaker">Rian</span>
+            <span class="message">Great. How do I get there?</span>
+        </div>
+
+        <div class="dialog-card" data-time="28">
+            <span class="speaker">Ben</span>
+            <span class="message">First, go straight on until you hit the main intersection.</span>
+        </div>
+
+        <div class="dialog-card" data-time="34">
+            <span class="speaker">Rian</span>
+            <span class="message">Okay, straight on. And after that?</span>
+        </div>
+
+        <div class="dialog-card" data-time="37">
+            <span class="speaker">Ben</span>
+            <span class="message">Turn left at the cafe, then immediately turn right.</span>
+        </div>
+
+        <div class="dialog-card" data-time="42">
+            <span class="speaker">Rian</span>
+            <span class="message">Can you show me? I'm a bit bad with directions.</span>
+        </div>
+
+        <div class="dialog-card" data-time="45">
+            <span class="speaker">Ben</span>
+            <span class="message">Sure! It's right next to the restaurant with the yellow awning.</span>
+        </div>
+
+        <div class="dialog-card" data-time="50">
+            <span class="speaker">Rian</span>
+            <span class="message">Is it opposite the hospital?</span>
+        </div>
+
+        <div class="dialog-card" data-time="53">
+            <span class="speaker">Ben</span>
+            <span class="message">No, it's actually behind the building with the green roof.</span>
+        </div>
+
+        <div class="dialog-card" data-time="58">
+            <span class="speaker">Rian</span>
+            <span class="message">Ah, I see. It's on the corner of the block, right?</span>
+        </div>
+
+        <div class="dialog-card" data-time="62">
+            <span class="speaker">Ben</span>
+            <span class="message">Exactly! You can’t miss it. It’s across the street from the park.</span>
+        </div>
+
+        <div class="dialog-card" data-time="67">
+            <span class="speaker">Rian</span>
+            <span class="message">Wait, let me see the maps... Oh, and where is the train station?</span>
+        </div>
+
+        <div class="dialog-card" data-time="73">
+            <span class="speaker">Rian</span>
+            <span class="message">(Seeing a taxi) Pull over please! Maybe the driver knows.</span>
+        </div>
+
+        <div class="dialog-card" data-time="77">
+            <span class="speaker">Rian</span>
+            <span class="message">Actually, could you guide me there? I'd feel safer.</span>
+        </div>
+
+        <div class="dialog-card" data-time="81">
+            <span class="speaker">Ben</span>
+            <span class="message">Sure thing! Also, is there a toilet nearby? I need one too!</span>
+        </div>
+    </div>
+</div>s
+
+<style is:global>
+    /* Reset & Base Styling */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+        --primary: #4f46e5;
+        --bg-body: #f8fafc;
+        --bg-card: #ffffff;
+        --text-main: #1e293b;
+        --text-grey: #64748b;
+        --border: #e2e8f0;
+        --active-light: #eef2ff;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-body);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .quiz-banner {
+        width: 100%;
+        margin-bottom: 25px; 
+        line-height: 0;
+        overflow: hidden;
+        border-radius: 24px 24px 0 0;
+    }
+
+    .quiz-banner img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+    }
+
+    /* Container */
+    .container {
+        width: 100%;
+        max-width: 700px;
+        background: var(--bg-card);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Sticky Header */
+    .header-player {
+        position: sticky;
+        top: 0;
+        background: var(--bg-card);
+        padding: 0 20px 20px 20px;
+        border-bottom: 1px solid var(--border);
+        z-index: 100;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 { margin: 0 0 15px 0; font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+    audio { width: 100%; height: 44px; margin-bottom: 15px; }
+
+    /* Speed Control & Transcript (Tidak Ada Perubahan Desain) */
+    .speed-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #f8fafc; padding: 6px; border-radius: 12px; }
+    .btn-speed { flex: 1; background: transparent; border: none; padding: 8px 5px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: var(--text-grey); transition: 0.2s; }
+    .btn-speed.active { background: var(--primary); color: white; }
+    .transcript-container { flex: 1; padding: 15px; overflow-y: auto; scroll-behavior: smooth; }
+    .dialog-card { background: #ffffff; border: 1px solid var(--border); padding: 16px; border-radius: 14px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s ease; }
+    .dialog-card.active { background-color: var(--active-light); border-color: var(--primary); transform: scale(0.98); }
+    .speaker { display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-grey); text-transform: uppercase; margin-bottom: 6px; }
+    .message { font-size: 1rem; line-height: 1.5; color: var(--text-main); }
+
+    @media (min-width: 768px) {
+        body { padding: 40px 20px; }
+        .container { min-height: auto; height: 85vh; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+    }
+
+    @media (max-width: 480px) {
+        .quiz-banner { border-radius: 20px 20px 0 0; }
+    }
+</style>
+
+<script is:inline>
+    const audio = document.getElementById('mainAudio');
+    const cards = document.querySelectorAll('.dialog-card');
+
+    window.setPlaySpeed = function(rate, btn) {
+        if (!audio) return;
+        audio.playbackRate = rate;
+        document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const time = parseFloat(card.getAttribute('data-time'));
+            audio.currentTime = time;
+            audio.play();
+        });
+    });
+
+    let lastActive = -1;
+    audio.addEventListener('timeupdate', () => {
+        const now = audio.currentTime;
+        let currentIdx = -1;
+        cards.forEach((card, i) => {
+            const start = parseFloat(card.getAttribute('data-time'));
+            const next = cards[i + 1];
+            const end = next ? parseFloat(next.getAttribute('data-time')) : Infinity;
+            if (now >= start && now < end) currentIdx = i;
+        });
+        if (currentIdx !== -1 && currentIdx !== lastActive) {
+            cards.forEach(c => c.classList.remove('active'));
+            const activeCard = cards[currentIdx];
+            activeCard.classList.add('active');
+            activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            lastActive = currentIdx;
+        }
+    });
+</script>
+
+</body>
+</html>
